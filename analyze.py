@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Python Data Analytics Script for the Ontario Municipal Election 2026 Poll Worker dataset.
+Strictly analyzes confirmed published data.
 """
 import json
 import csv
@@ -53,12 +54,20 @@ def run_analytics():
         print(f"  - Age {age:<10}: {count:>3} positions ({count/total_roles*100:.1f}%)")
     print()
 
-    # 4. Compensation Benchmarks
-    print("4. ESTIMATED DAY-RATE BENCHMARKS:")
+    # 4. Confirmed Published Rates Summary
+    published_roles = []
+    for m_name, m in data.items():
+        for r in m.get("roles", []):
+            if r.get("pay_status") == "ACTUAL_PUBLISHED" and r.get("pay_actual_raw"):
+                published_roles.append((m_name, r.get("title"), r.get("pay_actual_raw")))
+
+    print("4. CONFIRMED PUBLISHED PAY SCHEDULES:")
     print("-" * 60)
-    print("  - Voting Location Supervisors (VLS/SRO) : $320 - $420 / day + $60-$75 training")
-    print("  - Deputy Returning Officers (DRO)        : $240 - $320 / day + $50-$65 training")
-    print("  - Information Assistants / Greeters     : $200 - $260 / day + $45-$55 training")
+    if published_roles:
+        for muni, title, pay in published_roles:
+            print(f"  - {muni:<22} | {title:<30} : {pay}")
+    else:
+        print("  - No compensation tariffs currently published by tracked portals.")
     print("=" * 60)
 
 if __name__ == "__main__":

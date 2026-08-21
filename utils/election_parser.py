@@ -1,23 +1,10 @@
 """
-Parser for Ontario Municipal Election worker roles, day-rates, stipends, and requirements.
-Strictly separates ACTUAL published rates from ESTIMATED regional benchmarks.
+Parser for Ontario Municipal Election worker roles, compensation, stipends, and requirements.
+Strictly extracts officially published pay rates. If unstated, pay is marked as NOT_AVAILABLE / null.
 """
 import re
 from typing import List, Tuple, Optional, Dict
 from models import ElectionRole
-
-# Modeled benchmark estimates based on Ontario municipal staffing reports
-REGIONAL_BENCHMARK_RATES = {
-    "SUPERVISOR": 350.0,
-    "DRO": 275.0,
-    "GREETER": 225.0,
-    "CLERK": 250.0,
-    "REVISION": 260.0,
-    "LOGISTICS": 240.0,
-    "TECH": 300.0,
-    "STUDENT": 200.0,
-    "POLL_WORKER": 260.0
-}
 
 ROLE_DEFINITIONS = [
     {
@@ -121,7 +108,7 @@ def extract_requirements(text: str) -> List[str]:
 
 
 def extract_roles_from_content(text: str) -> List[ElectionRole]:
-    """Extract roles and strictly tag Actual vs Estimated pay."""
+    """Extract roles and only set pay when explicitly published."""
     found_roles: List[ElectionRole] = []
     seen_categories = set()
 
@@ -152,32 +139,24 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
                     if found_age:
                         min_age = int(found_age)
 
-                # STRICT ACTUAL VS ESTIMATE
-                pay_status = "HONORARIUM_UNPUBLISHED"
-                pay_is_estimated = False
-                pay_actual_raw = None
-                pay_actual_amount = None
                 pay_type = "DAY_RATE"
-                
-                est_benchmark = REGIONAL_BENCHMARK_RATES.get(cat, 260.0)
 
                 if day_match:
                     pay_actual_amount = float(day_match.group(1))
                     pay_actual_raw = f"${pay_actual_amount:g}/day"
                     pay_status = "ACTUAL_PUBLISHED"
-                    pay_is_estimated = False
-                    pay_notes = "Explicitly published on municipal portal"
+                    pay_notes = "Published on official municipal portal"
                 elif hourly_match:
                     pay_actual_amount = float(hourly_match.group(1))
                     pay_actual_raw = f"${pay_actual_amount:g}/hour"
                     pay_type = "HOURLY"
                     pay_status = "ACTUAL_PUBLISHED"
-                    pay_is_estimated = False
-                    pay_notes = "Explicitly published on municipal portal"
+                    pay_notes = "Published on official municipal portal"
                 else:
-                    pay_status = "ESTIMATED_BENCHMARK"
-                    pay_is_estimated = True
-                    pay_notes = f"Modeled benchmark (~${int(est_benchmark)}/day) based on municipal staffing policy"
+                    pay_actual_amount = None
+                    pay_actual_raw = None
+                    pay_status = "NOT_AVAILABLE"
+                    pay_notes = "Rate not yet published by municipality"
 
                 clean_desc = " ".join(block.split())
                 if len(clean_desc) > 300:
@@ -187,10 +166,8 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
                     title=role_def["title"],
                     role_category=cat,
                     pay_status=pay_status,
-                    pay_is_estimated=pay_is_estimated,
                     pay_actual_raw=pay_actual_raw,
                     pay_actual_amount=pay_actual_amount,
-                    pay_estimated_amount=est_benchmark,
                     pay_source_notes=pay_notes,
                     pay_type=pay_type,
                     training_pay=training_pay,
@@ -199,23 +176,20 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
                     min_age=min_age
                 ))
 
-    # Baseline fallback if specific roles weren't split
+    # Baseline fallback if specific roles weren't split in page text
     if not found_roles:
         for cat, title, min_age in [
             ("DRO", "Deputy Returning Officer (DRO)", 18),
             ("SUPERVISOR", "Voting Location Supervisor (VLS)", 18),
             ("GREETER", "Information Assistant / Greeter", 16)
         ]:
-            est_benchmark = REGIONAL_BENCHMARK_RATES.get(cat, 260.0)
             found_roles.append(ElectionRole(
                 title=title,
                 role_category=cat,
-                pay_status="ESTIMATED_BENCHMARK",
-                pay_is_estimated=True,
+                pay_status="NOT_AVAILABLE",
                 pay_actual_raw=None,
                 pay_actual_amount=None,
-                pay_estimated_amount=est_benchmark,
-                pay_source_notes=f"Modeled benchmark (~${int(est_benchmark)}/day) based on municipal staffing policy",
+                pay_source_notes="Rate not yet published by municipality",
                 pay_type="DAY_RATE",
                 hours_or_shift="8:30 AM - 9:00 PM on October 26, 2026",
                 min_age=min_age

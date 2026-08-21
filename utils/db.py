@@ -1,5 +1,6 @@
 """
-Database persistence and query engine with strict Actual vs Estimated pay separation.
+Database persistence and query engine for Ontario Municipal Election worker postings.
+Stores only verified data. If compensation is unstated, it is recorded as null / NOT_AVAILABLE.
 """
 import sqlite3
 import json
@@ -38,7 +39,7 @@ class ElectionJobDatabase:
                 )
             """)
             
-            # Roles Table with Strict Actual vs Estimate Columns
+            # Roles Table
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS election_roles (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -47,10 +48,8 @@ class ElectionJobDatabase:
                     title TEXT NOT NULL,
                     role_category TEXT NOT NULL,
                     pay_status TEXT NOT NULL,
-                    pay_is_estimated INTEGER NOT NULL,
                     pay_actual_raw TEXT,
                     pay_actual_amount REAL,
-                    pay_estimated_amount REAL,
                     pay_source_notes TEXT,
                     pay_type TEXT,
                     training_pay TEXT,
@@ -108,14 +107,13 @@ class ElectionJobDatabase:
                 conn.execute("""
                     INSERT INTO election_roles (
                         posting_id, municipality, title, role_category,
-                        pay_status, pay_is_estimated, pay_actual_raw,
-                        pay_actual_amount, pay_estimated_amount, pay_source_notes,
-                        pay_type, training_pay, hours_or_shift, min_age, description
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        pay_status, pay_actual_raw, pay_actual_amount,
+                        pay_source_notes, pay_type, training_pay,
+                        hours_or_shift, min_age, description
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     posting.id, posting.municipality, role.title, role.role_category,
-                    role.pay_status, 1 if role.pay_is_estimated else 0,
-                    role.pay_actual_raw, role.pay_actual_amount, role.pay_estimated_amount,
+                    role.pay_status, role.pay_actual_raw, role.pay_actual_amount,
                     role.pay_source_notes, role.pay_type, role.training_pay,
                     role.hours_or_shift, role.min_age, role.description
                 ))
@@ -147,10 +145,8 @@ class ElectionJobDatabase:
                         "title": r["title"],
                         "category": r["role_category"],
                         "pay_status": r["pay_status"],
-                        "pay_is_estimated": bool(r["pay_is_estimated"]),
                         "pay_actual_raw": r["pay_actual_raw"],
                         "pay_actual_amount": r["pay_actual_amount"],
-                        "pay_estimated_amount": r["pay_estimated_amount"],
                         "pay_source_notes": r["pay_source_notes"],
                         "pay_type": r["pay_type"],
                         "training_pay": r["training_pay"],
@@ -190,10 +186,8 @@ class ElectionJobDatabase:
                     r.title as role_title,
                     r.role_category,
                     r.pay_status,
-                    CASE WHEN r.pay_is_estimated = 1 THEN 'TRUE' ELSE 'FALSE' END as pay_is_estimated,
                     r.pay_actual_raw as pay_actual_published,
                     r.pay_actual_amount,
-                    r.pay_estimated_amount as pay_modeled_estimate,
                     r.pay_source_notes,
                     r.pay_type,
                     r.training_pay,
@@ -217,18 +211,18 @@ class ElectionJobDatabase:
                 WHERE m.is_verified_2026 = 1
             """).fetchone()[0]
             
-            actual_count = conn.execute("""
+            published_count = conn.execute("""
                 SELECT COUNT(*) FROM election_roles r 
                 JOIN municipal_postings m ON r.posting_id = m.id 
-                WHERE m.is_verified_2026 = 1 AND r.pay_is_estimated = 0 AND r.pay_actual_amount IS NOT NULL
+                WHERE m.is_verified_2026 = 1 AND r.pay_status = 'ACTUAL_PUBLISHED' AND r.pay_actual_raw IS NOT NULL
             """).fetchone()[0]
 
-            estimated_count = total_roles - actual_count
+            not_available_count = total_roles - published_count
 
             return {
                 "total_municipalities": total_munis,
                 "total_roles": total_roles,
-                "roles_with_actual_published_pay": actual_count,
-                "roles_with_modeled_estimate": estimated_count,
+                "roles_with_published_pay": published_count,
+                "roles_not_available": not_available_count,
                 "election_year": "2026"
             }

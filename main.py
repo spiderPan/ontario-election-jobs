@@ -121,14 +121,14 @@ def display_list(target_filter: str = None):
         table.add_column("Role Title", style="bold cyan", width=30)
         table.add_column("Category", style="magenta", width=12)
         table.add_column("Pay Status", style="yellow", width=16)
-        table.add_column("Pay Rate / Tariff", style="green", width=22)
+        table.add_column("Published Pay Rate", style="green", width=22)
         table.add_column("Hours / Shift", style="white", width=24)
         table.add_column("Min Age", style="yellow", width=8)
 
         for r in info["roles"]:
-            is_actual = not r["pay_is_estimated"]
-            status_tag = "[bold green]ACTUAL[/bold green]" if is_actual else "[dim amber]ESTIMATE[/dim amber]"
-            pay_str = r["pay_actual_raw"] if is_actual else f"~${int(r['pay_estimated_amount'])}/day (Modeled)"
+            is_published = r["pay_status"] == "ACTUAL_PUBLISHED" and bool(r.get("pay_actual_raw"))
+            status_tag = "[bold green]PUBLISHED[/bold green]" if is_published else "[dim]NOT AVAILABLE[/dim]"
+            pay_str = r["pay_actual_raw"] if is_published else "[dim]Not available[/dim]"
 
             table.add_row(
                 r["title"],
@@ -155,8 +155,8 @@ def display_stats():
     table.add_row("Election Cycle", "2026 General Municipal Elections")
     table.add_row("Verified 2026 Municipalities", str(stats["total_municipalities"]))
     table.add_row("Total Poll Worker Roles", str(stats["total_roles"]))
-    table.add_row("Roles with Actual Published Pay", f"[green]{stats['roles_with_actual_published_pay']}[/green]")
-    table.add_row("Roles with Modeled Staffing Benchmark", f"[amber]{stats['roles_with_modeled_estimate']}[/amber]")
+    table.add_row("Roles with Confirmed Published Pay", f"[green]{stats['roles_with_published_pay']}[/green]")
+    table.add_row("Roles with Pay Not Yet Published", f"[dim]{stats['roles_not_available']}[/dim]")
 
     console.print(table)
 

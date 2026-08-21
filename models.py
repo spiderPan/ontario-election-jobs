@@ -1,5 +1,6 @@
 """
-Data models for Ontario municipal election worker postings with strict separation between ACTUAL published data and ESTIMATED analytical benchmarks.
+Data models for Ontario municipal election worker postings.
+Strictly displays verified published data only; unstated compensation is set to None / Not available.
 """
 from datetime import datetime
 from typing import List, Optional
@@ -10,12 +11,9 @@ class ElectionRole(BaseModel):
     title: str = Field(description="Role title (e.g. Deputy Returning Officer, Voting Location Supervisor)")
     role_category: str = Field(default="POLL_WORKER", description="Category: SUPERVISOR, DRO, CLERK, GREETER, LOGISTICS, TECH")
     
-    # STRICT SEPARATION: Actual vs Estimated
-    pay_status: str = Field(default="HONORARIUM_UNPUBLISHED", description="ACTUAL_PUBLISHED | ESTIMATED_BENCHMARK | HONORARIUM_UNPUBLISHED")
-    pay_is_estimated: bool = Field(default=False, description="True if value is an analytical estimate, False if actual published text")
-    pay_actual_raw: Optional[str] = Field(default=None, description="Exact dollar amount scraped from page, or None if unstated")
-    pay_actual_amount: Optional[float] = Field(default=None, description="Numeric parsed dollar amount strictly from page text")
-    pay_estimated_amount: Optional[float] = Field(default=None, description="Analytical benchmark estimate based on municipal staffing policy")
+    pay_status: str = Field(default="NOT_AVAILABLE", description="ACTUAL_PUBLISHED | NOT_AVAILABLE")
+    pay_actual_raw: Optional[str] = Field(default=None, description="Exact compensation scraped from page, or None if unstated")
+    pay_actual_amount: Optional[float] = Field(default=None, description="Numeric parsed dollar amount strictly from page text, or None")
     pay_source_notes: str = Field(default="Live municipal page", description="Explanation of pay data origin")
     
     pay_type: str = Field(default="UNKNOWN", description="DAY_RATE, HOURLY, HONORARIUM, or UNKNOWN")

@@ -1,5 +1,6 @@
 """
-Export utility for verified 2026 Ontario Municipal Election worker postings with strict Actual vs Estimate separation.
+Export utility for verified 2026 Ontario Municipal Election worker postings.
+Strictly exports officially published data; unstated compensation is set to Not available / null.
 """
 import json
 import csv
@@ -17,13 +18,13 @@ def export_all(db: ElectionJobDatabase):
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(grouped, f, indent=2, ensure_ascii=False)
 
-    # 2. Export Flat CSV with Dedicated Actual vs Estimate Columns
+    # 2. Export Flat CSV with Confirmed Data
     csv_path = "data/election_jobs.csv"
     if flat_roles:
         fieldnames = [
             "municipality", "region", "municipal_status", "election_year",
-            "role_title", "role_category", "pay_status", "pay_is_estimated",
-            "pay_actual_published", "pay_modeled_estimate", "pay_source_notes",
+            "role_title", "role_category", "pay_status",
+            "pay_actual_published", "pay_actual_amount", "pay_source_notes",
             "pay_type", "training_pay", "hours_or_shift", "min_age",
             "apply_url", "election_portal_url"
         ]
@@ -40,11 +41,11 @@ def export_all(db: ElectionJobDatabase):
         f.write(f"**General Voting Day:** Monday, October 26, 2026  \n")
         f.write(f"**Verified 2026 Municipalities Tracked:** {stats['total_municipalities']}  \n")
         f.write(f"**Verified 2026 Poll Roles:** {stats['total_roles']}  \n")
-        f.write(f"**Roles with Confirmed Published Pay:** {stats['roles_with_actual_published_pay']}  \n")
-        f.write(f"**Roles with Modeled Staffing Benchmark:** {stats['roles_with_modeled_estimate']}  \n\n")
+        f.write(f"**Roles with Confirmed Published Pay:** {stats['roles_with_published_pay']}  \n")
+        f.write(f"**Roles with Pay Rate Not Yet Published:** {stats['roles_not_available']}  \n\n")
         
-        f.write("> [!IMPORTANT]\n")
-        f.write("> **Data Integrity Notice:** Actual rates published on municipal portals are labeled as `[ACTUAL]`. Unstated honorariums modeled from municipal staffing schedules are labeled as `[ESTIMATE]`.\n\n")
+        f.write("> [!NOTE]\n")
+        f.write("> **Data Integrity Standard:** Only officially published compensation rates are shown. Municipalities that have not yet published pay tariffs for the 2026 election cycle are listed as `Not available`.\n\n")
 
         f.write("## Verified 2026 Municipal Opportunities (Grouped by Municipality)\n\n")
 
@@ -57,15 +58,15 @@ def export_all(db: ElectionJobDatabase):
                 f.write(f"- **Contact:** `{info['contact_email']}`\n")
             f.write("\n**Available Poll Positions (2026):**\n\n")
             
-            f.write("| Role Title | Category | Pay Type & Rate | Data Source | Shift Hours | Min Age |\n")
+            f.write("| Role Title | Category | Published Pay Rate | Status | Shift Hours | Min Age |\n")
             f.write("|---|---|---|---|---|---|\n")
             for r in info["roles"]:
-                if r["pay_status"] == "ACTUAL_PUBLISHED":
-                    pay_str = f"**{r['pay_actual_raw']}** (Actual)"
-                    source_str = "Verified Published"
+                if r["pay_status"] == "ACTUAL_PUBLISHED" and r.get("pay_actual_raw"):
+                    pay_str = f"**{r['pay_actual_raw']}**"
+                    source_str = "Published"
                 else:
-                    pay_str = f"~${int(r['pay_estimated_amount'])}/day (Modeled)"
-                    source_str = "Estimated Benchmark"
+                    pay_str = "*Not available*"
+                    source_str = "TBD"
                 
                 hours = r["hours_or_shift"] or "Voting Day (8:30 AM - 9:00 PM)"
                 f.write(f"| **{r['title']}** | {r['category']} | {pay_str} | `{source_str}` | {hours} | {r['min_age']}+ |\n")

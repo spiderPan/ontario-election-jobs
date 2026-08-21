@@ -429,7 +429,23 @@
 
       let matchedMunis = 0;
 
-      for (const [muniName, m] of Object.entries(allData)) {
+      // Sort: Confirmed published pay municipalities (and London anchor) first, then alphabetical
+      const sortedEntries = Object.entries(allData).sort(([nameA, a], [nameB, b]) => {
+        const isLondonA = nameA.toLowerCase().includes('london');
+        const isLondonB = nameB.toLowerCase().includes('london');
+        if (isLondonA && !isLondonB) return -1;
+        if (!isLondonA && isLondonB) return 1;
+
+        const hasPubA = (a.roles || []).some(r => r.pay_status === 'ACTUAL_PUBLISHED' && r.pay_actual_raw);
+        const hasPubB = (b.roles || []).some(r => r.pay_status === 'ACTUAL_PUBLISHED' && r.pay_actual_raw);
+
+        if (hasPubA && !hasPubB) return -1;
+        if (!hasPubA && hasPubB) return 1;
+
+        return nameA.localeCompare(nameB);
+      });
+
+      for (const [muniName, m] of sortedEntries) {
         const matchSearch = !search || 
           muniName.toLowerCase().includes(search) || 
           (m.region && m.region.toLowerCase().includes(search)) ||
@@ -451,10 +467,13 @@
 
     function createMuniCard(name, m, activeCategory) {
       const isLondon = name.toLowerCase().includes('london');
+      const hasConfirmedPay = (m.roles || []).some(r => r.pay_status === 'ACTUAL_PUBLISHED' && r.pay_actual_raw);
       const card = document.createElement('div');
       card.className = isLondon 
         ? "bg-slate-900/90 border-2 border-emerald-500/60 rounded-3xl p-5 flex flex-col justify-between hover:border-emerald-400 transition shadow-xl shadow-emerald-950/20 space-y-4"
-        : "bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 transition shadow-lg space-y-4";
+        : (hasConfirmedPay
+          ? "bg-slate-900/90 border-2 border-emerald-500/30 rounded-2xl p-5 flex flex-col justify-between hover:border-emerald-400/60 transition shadow-xl space-y-4"
+          : "bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 transition shadow-lg space-y-4");
 
       const rolesHtml = (m.roles || []).map((r, idx) => {
         const isPublished = r.pay_status === 'ACTUAL_PUBLISHED' && !!r.pay_actual_raw;
@@ -539,7 +558,8 @@
             <div>
               <div class="flex items-center gap-2">
                 <h2 class="text-lg font-bold text-white">${name}</h2>
-                ${isLondon ? '<span class="text-[9px] px-2 py-0.5 bg-emerald-500/20 text-emerald-300 font-bold rounded-full">ANCHOR</span>' : ''}
+                ${isLondon ? '<span class="text-[9px] px-2 py-0.5 bg-emerald-500/20 text-emerald-300 font-bold rounded-full border border-emerald-500/30">ANCHOR</span>' : ''}
+                ${!isLondon && hasConfirmedPay ? '<span class="text-[9px] px-2 py-0.5 bg-emerald-500/10 text-emerald-400 font-bold rounded-full border border-emerald-500/20">CONFIRMED PAY</span>' : ''}
               </div>
               <span class="text-xs text-slate-400 font-medium">${m.region || 'Ontario'} • ${m.tier || 'Municipality'}</span>
             </div>
@@ -595,6 +615,15 @@
         });
       }
 
+      // Sort modal matches: confirmed published pay first, then alphabetical
+      matches.sort((itemA, itemB) => {
+        const isPubA = itemA.role.pay_status === 'ACTUAL_PUBLISHED' && !!itemA.role.pay_actual_raw;
+        const isPubB = itemB.role.pay_status === 'ACTUAL_PUBLISHED' && !!itemB.role.pay_actual_raw;
+        if (isPubA && !isPubB) return -1;
+        if (!isPubA && isPubB) return 1;
+        return itemA.muniName.localeCompare(itemB.muniName);
+      });
+
       document.getElementById('modal-total-count').innerText = `${matches.length} municipalities offer this role`;
 
       matches.forEach(item => {
@@ -603,7 +632,9 @@
         const hasApply = Boolean(item.muni.has_direct_apply && (item.muni.status === 'Accepting Applications' || item.muni.status === 'Applications Open'));
 
         const row = document.createElement('div');
-        row.className = "bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition";
+        row.className = isPublished
+          ? "bg-slate-950/90 border-2 border-emerald-500/30 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-emerald-400/50 transition shadow-md"
+          : "bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition";
         row.innerHTML = `
           <div>
             <div class="flex items-center gap-2">

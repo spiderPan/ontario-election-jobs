@@ -15,7 +15,8 @@ ROLE_DEFINITIONS = [
             r"Supervisory Returning Officer", r"\bSRO\b", r"\bVLS\b",
             r"Poll Supervisor", r"Area Supervisor", r"Site Supervisor"
         ],
-        "default_min_age": 18
+        "default_min_age": 18,
+        "description": "Supervises overall voting place operations and election personnel. Resolves voter inquiries, oversees optical scan tabulators/ballot security, coordinates poll opening and closing, and liaises directly with the Municipal Clerk."
     },
     {
         "category": "DRO",
@@ -23,7 +24,8 @@ ROLE_DEFINITIONS = [
         "patterns": [
             r"Deputy Returning Officer", r"\bDRO\b", r"Deputy Returning Officers"
         ],
-        "default_min_age": 18
+        "default_min_age": 18,
+        "description": "Administers statutory declarations and oaths, issues official ballots to qualified electors, maintains ballot box custody, operates tabulators, protects elector secrecy, and reconciles ballot accounting tallies at poll close."
     },
     {
         "category": "CLERK",
@@ -32,7 +34,8 @@ ROLE_DEFINITIONS = [
             r"Tabulator Operator", r"Tabulator Clerk", r"Ballot Clerk",
             r"Poll Clerk", r"Voting Clerk", r"Election Clerk"
         ],
-        "default_min_age": 18
+        "default_min_age": 18,
+        "description": "Greets electors, checks names against the official Voters' List, verifies acceptable voter identification under the Municipal Elections Act, maintains the poll record, and guides voters to tabulators."
     },
     {
         "category": "GREETER",
@@ -41,7 +44,8 @@ ROLE_DEFINITIONS = [
             r"Information Assistant", r"Greeter", r"Line Monitor",
             r"Line Management", r"Customer Service Assistant", r"Entrance Greeter"
         ],
-        "default_min_age": 16
+        "default_min_age": 16,
+        "description": "Welcomes electors at facility entrances, checks voter information cards, directs voters to appropriate voting tables, assists electors requiring accessibility accommodations, and maintains organized queue lines."
     },
     {
         "category": "REVISION",
@@ -50,7 +54,8 @@ ROLE_DEFINITIONS = [
             r"Revision Officer", r"Voter Registration Official",
             r"Registration Clerk", r"Revisions Clerk", r"Voters List Clerk"
         ],
-        "default_min_age": 18
+        "default_min_age": 18,
+        "description": "Processes voter list additions, corrections, and address updates. Verifies proof of identity and residency, administers declarations of qualifications, and issues official Certificates to Vote."
     },
     {
         "category": "STUDENT",
@@ -59,7 +64,8 @@ ROLE_DEFINITIONS = [
             r"Youth Election Worker", r"Student Election Worker",
             r"Youth Ambassador", r"High School Election Assistant"
         ],
-        "default_min_age": 16
+        "default_min_age": 16,
+        "description": "Assists election staff with greeting electors, wayfinding, accessibility support, and general election day logistics. Open to high school students aged 16-17 looking for civic engagement experience."
     }
 ]
 
@@ -158,9 +164,7 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
                     pay_status = "NOT_AVAILABLE"
                     pay_notes = "Rate not yet published by municipality"
 
-                clean_desc = " ".join(block.split())
-                if len(clean_desc) > 300:
-                    clean_desc = clean_desc[:300] + "..."
+                desc = role_def.get("description")
 
                 found_roles.append(ElectionRole(
                     title=role_def["title"],
@@ -172,7 +176,7 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
                     pay_type=pay_type,
                     training_pay=training_pay,
                     hours_or_shift=shift_hours,
-                    description=clean_desc,
+                    description=desc,
                     min_age=min_age
                 ))
 
@@ -183,6 +187,7 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
             ("SUPERVISOR", "Voting Location Supervisor (VLS)", 18),
             ("GREETER", "Information Assistant / Greeter", 16)
         ]:
+            role_meta = next((r for r in ROLE_DEFINITIONS if r["category"] == cat), {})
             found_roles.append(ElectionRole(
                 title=title,
                 role_category=cat,
@@ -192,6 +197,7 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
                 pay_source_notes="Rate not yet published by municipality",
                 pay_type="DAY_RATE",
                 hours_or_shift="8:30 AM - 9:00 PM on October 26, 2026",
+                description=role_meta.get("description", "Ontario Municipal Poll Worker Position"),
                 min_age=min_age
             ))
 

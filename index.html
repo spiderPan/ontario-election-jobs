@@ -10,6 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .role-glow {
+      box-shadow: 0 0 20px -2px rgba(59, 130, 246, 0.45);
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen">
@@ -44,7 +47,7 @@
         </nav>
 
         <div class="hidden sm:flex items-center gap-1.5 pl-2 border-l border-slate-800">
-          <a href="data/election_jobs.csv" download class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-800 text-xs flex items-center gap-1 transition" title="Download CSV (Separated Actual vs Estimate)">
+          <a href="data/election_jobs.csv" download class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-800 text-xs flex items-center gap-1 transition" title="Download CSV">
             <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-400"></i>
           </a>
           <a href="data/election_jobs_by_municipality.json" download class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-800 text-xs flex items-center gap-1 transition" title="JSON Feed">
@@ -100,7 +103,7 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between">
+        <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between cursor-pointer hover:border-slate-700 transition" onclick="setRoleHighlight('SUPERVISOR')">
           <div>
             <span class="text-xs font-semibold text-white">Voting Location Supervisor</span>
             <div class="text-xs text-slate-400 italic mt-0.5">Not available <span class="text-[10px] text-slate-500 not-italic font-medium">(TBD by City)</span></div>
@@ -108,7 +111,7 @@
           <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold border border-slate-700">SUPERVISOR</span>
         </div>
 
-        <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between">
+        <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between cursor-pointer hover:border-slate-700 transition" onclick="setRoleHighlight('DRO')">
           <div>
             <span class="text-xs font-semibold text-white">Deputy Returning Officer (DRO)</span>
             <div class="text-xs text-slate-400 italic mt-0.5">Not available <span class="text-[10px] text-slate-500 not-italic font-medium">(TBD by City)</span></div>
@@ -116,13 +119,76 @@
           <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold border border-slate-700">DRO</span>
         </div>
 
-        <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between">
+        <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between cursor-pointer hover:border-slate-700 transition" onclick="setRoleHighlight('GREETER')">
           <div>
             <span class="text-xs font-semibold text-white">Information Assistant / Greeter</span>
             <div class="text-xs text-slate-400 italic mt-0.5">Not available <span class="text-[10px] text-slate-500 not-italic font-medium">(TBD by City)</span></div>
           </div>
           <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold border border-slate-700">GREETER</span>
         </div>
+      </div>
+    </div>
+
+    <!-- Interactive Role Category Highlighting Bar -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Highlight & Compare Roles Across Ontario:</span>
+        </div>
+        <span class="text-[11px] text-slate-400 hidden sm:inline">Click any title to highlight duties across all municipalities</span>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2" id="role-pill-chips">
+        <button onclick="setRoleHighlight('')" id="pill-ALL" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-emerald-600 text-white shadow-sm flex items-center gap-1.5">
+          <i data-lucide="layers" class="w-3.5 h-3.5"></i> All Positions
+        </button>
+        <button onclick="setRoleHighlight('DRO')" id="pill-DRO" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5">
+          <span>Deputy Returning Officer (DRO)</span>
+        </button>
+        <button onclick="setRoleHighlight('SUPERVISOR')" id="pill-SUPERVISOR" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5">
+          <span>Voting Location Supervisor (VLS)</span>
+        </button>
+        <button onclick="setRoleHighlight('GREETER')" id="pill-GREETER" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5">
+          <span>Information Assistant / Greeter</span>
+        </button>
+        <button onclick="setRoleHighlight('CLERK')" id="pill-CLERK" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5">
+          <span>Poll Clerk / Tabulator</span>
+        </button>
+        <button onclick="setRoleHighlight('REVISION')" id="pill-REVISION" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5">
+          <span>Revision / Registration Clerk</span>
+        </button>
+        <button onclick="setRoleHighlight('STUDENT')" id="pill-STUDENT" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5">
+          <span>Youth / Student Worker (16+)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Role Description Spotlight Banner (Shows when a title/category is active) -->
+    <div id="role-spotlight-panel" class="hidden bg-gradient-to-r from-slate-900 via-blue-950/50 to-slate-900 border-2 border-blue-500/40 rounded-3xl p-5 shadow-2xl space-y-3 transition-all duration-300">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <span class="p-2 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30 font-bold text-xs uppercase flex items-center gap-1">
+            <i data-lucide="focus" class="w-3.5 h-3.5"></i> Title Spotlight
+          </span>
+          <h3 id="spotlight-title" class="text-base font-bold text-white">--</h3>
+          <span id="spotlight-badge" class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">ROLE</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openRoleComparisonModal()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md transition">
+            <i data-lucide="layers" class="w-3.5 h-3.5"></i> Compare Role Across All Municipalities
+          </button>
+          <button onclick="clearRoleHighlight()" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl border border-slate-700 transition" title="Close Spotlight">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-blue-300">Ontario Statutory Job Responsibilities:</span>
+        <p id="spotlight-desc" class="text-xs text-slate-200 leading-relaxed mt-1 bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+          --
+        </p>
       </div>
     </div>
 
@@ -148,6 +214,7 @@
             <option value="SUPERVISOR">Voting Location Supervisor</option>
             <option value="GREETER">Greeter / Information Assistant</option>
             <option value="CLERK">Poll Clerk / Tabulator Operator</option>
+            <option value="REVISION">Revision / Registration Clerk</option>
             <option value="STUDENT">Youth / Student Worker</option>
           </select>
         </div>
@@ -174,13 +241,48 @@
 
   </main>
 
+  <!-- Cross-Municipality Role Comparison Modal -->
+  <div id="role-comparison-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 id="modal-role-title" class="text-base font-bold text-white">Role Comparison</h3>
+            <p id="modal-role-subtitle" class="text-xs text-slate-400">Comparing this position across all verified Ontario municipalities</p>
+          </div>
+        </div>
+        <button onclick="closeRoleComparisonModal()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-4 bg-slate-950/40 border-b border-slate-800">
+        <p id="modal-role-description" class="text-xs text-slate-300 leading-relaxed"></p>
+      </div>
+
+      <div class="p-4 overflow-y-auto flex-1 space-y-3" id="modal-role-list">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="p-4 border-t border-slate-800 bg-slate-950/60 flex items-center justify-between text-xs text-slate-400">
+        <span id="modal-total-count">-- Municipalities found</span>
+        <button onclick="closeRoleComparisonModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold transition">
+          Close Comparison
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer class="border-t border-slate-800 bg-slate-950 py-8 text-center text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p>Ontario Municipal Elections Act, 1996 • Verified 2026 Poll Worker Hub</p>
       <div class="flex items-center gap-4 text-slate-400">
         <a href="index.html" class="hover:text-white transition">Directory</a>
         <a href="analytics.html" class="hover:text-white transition text-emerald-400 font-semibold">Cross-Region Analytics</a>
-        <a href="data/election_jobs.csv" download class="hover:text-white transition">CSV Data (Actuals vs Estimates)</a>
+        <a href="data/election_jobs.csv" download class="hover:text-white transition">CSV Data</a>
         <a href="data/election_jobs_by_municipality.json" download class="hover:text-white transition">JSON Feed</a>
       </div>
     </div>
@@ -189,6 +291,40 @@
   <script>
     let allData = {};
     let regionsSet = new Set();
+    let activeRoleHighlight = '';
+
+    const ROLE_METADATA = {
+      'DRO': {
+        title: 'Deputy Returning Officer (DRO)',
+        badge: 'DRO',
+        description: 'Administers statutory declarations and oaths, issues official ballots to qualified electors, maintains ballot box custody, operates tabulators, protects elector secrecy, and reconciles ballot accounting tallies at poll close.'
+      },
+      'SUPERVISOR': {
+        title: 'Voting Location Supervisor (VLS) / SRO',
+        badge: 'SUPERVISOR',
+        description: 'Supervises overall voting place operations and election personnel. Resolves voter inquiries, oversees optical scan tabulators/ballot security, coordinates poll opening and closing, and liaises directly with the Municipal Clerk.'
+      },
+      'GREETER': {
+        title: 'Information Assistant / Greeter / Line Monitor',
+        badge: 'GREETER',
+        description: 'Welcomes electors at facility entrances, checks voter information cards, directs voters to appropriate voting tables, assists electors requiring accessibility accommodations, and maintains organized queue lines.'
+      },
+      'CLERK': {
+        title: 'Poll Clerk / Tabulator Operator',
+        badge: 'CLERK',
+        description: 'Greets electors, checks names against the official Voters\' List, verifies acceptable voter identification under the Municipal Elections Act, maintains the poll record, and guides voters to tabulators.'
+      },
+      'REVISION': {
+        title: 'Revision Officer / Voter Registration Clerk',
+        badge: 'REVISION',
+        description: 'Processes voter list additions, corrections, and address updates. Verifies proof of identity and residency, administers declarations of qualifications, and issues official Certificates to Vote.'
+      },
+      'STUDENT': {
+        title: 'Youth / Student Election Worker (Ages 16-17)',
+        badge: 'STUDENT',
+        description: 'Assists election staff with greeting electors, wayfinding, accessibility support, and general election day logistics. Open to high school students aged 16-17 looking for civic engagement experience.'
+      }
+    };
 
     async function loadData() {
       try {
@@ -219,12 +355,14 @@
 
       document.getElementById('search-input').addEventListener('input', render);
       document.getElementById('region-filter').addEventListener('change', render);
-      document.getElementById('category-filter').addEventListener('change', render);
+      document.getElementById('category-filter').addEventListener('change', (e) => {
+        setRoleHighlight(e.target.value);
+      });
       document.getElementById('reset-filters').addEventListener('click', () => {
         document.getElementById('search-input').value = '';
         document.getElementById('region-filter').value = '';
         document.getElementById('category-filter').value = '';
-        render();
+        clearRoleHighlight();
       });
     }
 
@@ -233,10 +371,58 @@
       render();
     }
 
+    function setRoleHighlight(category) {
+      activeRoleHighlight = category;
+      document.getElementById('category-filter').value = category;
+
+      // Update Pill chips styling
+      document.querySelectorAll('#role-pill-chips button').forEach(btn => {
+        btn.className = "px-3.5 py-1.5 rounded-xl text-xs font-semibold transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5";
+      });
+
+      const activeBtnId = category ? `pill-${category}` : 'pill-ALL';
+      const activeBtn = document.getElementById(activeBtnId);
+      if (activeBtn) {
+        activeBtn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-blue-600 text-white shadow-sm flex items-center gap-1.5";
+      }
+
+      // Update spotlight panel
+      const spotlightPanel = document.getElementById('role-spotlight-panel');
+      if (category && ROLE_METADATA[category]) {
+        const meta = ROLE_METADATA[category];
+        document.getElementById('spotlight-title').innerText = meta.title;
+        document.getElementById('spotlight-badge').innerText = meta.badge;
+        document.getElementById('spotlight-desc').innerText = meta.description;
+        spotlightPanel.classList.remove('hidden');
+      } else {
+        spotlightPanel.classList.add('hidden');
+      }
+
+      render();
+    }
+
+    function clearRoleHighlight() {
+      setRoleHighlight('');
+    }
+
+    function toggleRoleDuties(id) {
+      const el = document.getElementById(`desc-${id}`);
+      const icon = document.getElementById(`icon-${id}`);
+      if (el) {
+        if (el.classList.contains('hidden')) {
+          el.classList.remove('hidden');
+          if (icon) icon.classList.add('rotate-180');
+        } else {
+          el.classList.add('hidden');
+          if (icon) icon.classList.remove('rotate-180');
+        }
+      }
+    }
+
     function render() {
       const search = document.getElementById('search-input').value.toLowerCase();
       const selRegion = document.getElementById('region-filter').value;
-      const selCat = document.getElementById('category-filter').value;
+      const selCat = activeRoleHighlight || document.getElementById('category-filter').value;
 
       const container = document.getElementById('munis-container');
       container.innerHTML = '';
@@ -254,7 +440,7 @@
 
         if (matchSearch && matchRegion && matchCat) {
           matchedMunis++;
-          const card = createMuniCard(muniName, m);
+          const card = createMuniCard(muniName, m, selCat);
           container.appendChild(card);
         }
       }
@@ -263,14 +449,14 @@
       lucide.createIcons();
     }
 
-    function createMuniCard(name, m) {
+    function createMuniCard(name, m, activeCategory) {
       const isLondon = name.toLowerCase().includes('london');
       const card = document.createElement('div');
       card.className = isLondon 
         ? "bg-slate-900/90 border-2 border-emerald-500/60 rounded-3xl p-5 flex flex-col justify-between hover:border-emerald-400 transition shadow-xl shadow-emerald-950/20 space-y-4"
         : "bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-700 transition shadow-lg space-y-4";
 
-      const rolesHtml = (m.roles || []).map(r => {
+      const rolesHtml = (m.roles || []).map((r, idx) => {
         const isPublished = r.pay_status === 'ACTUAL_PUBLISHED' && !!r.pay_actual_raw;
         const payDisplay = isPublished ? r.pay_actual_raw : 'Not available';
         const badgeClass = isPublished 
@@ -278,12 +464,24 @@
           : "bg-slate-800 text-slate-400 border border-slate-700";
         const badgeLabel = isPublished ? "PUBLISHED" : "NOT AVAILABLE";
 
+        const isHighlighted = activeCategory && r.category === activeCategory;
+        const roleCardClass = isHighlighted
+          ? "bg-blue-950/30 border-2 border-blue-500/70 rounded-xl p-3 space-y-2 role-glow transition"
+          : (activeCategory ? "bg-slate-950/50 border border-slate-800/50 opacity-40 hover:opacity-100 rounded-xl p-3 space-y-2 transition" : "bg-slate-950/80 border border-slate-800/80 rounded-xl p-3 space-y-2 transition");
+
+        const roleId = `${name.replace(/[^a-zA-Z0-9]/g, '')}-${idx}`;
+        const descText = r.description || (ROLE_METADATA[r.category] ? ROLE_METADATA[r.category].description : 'Ontario Municipal Election Official Role');
+
         return `
-          <div class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-3 space-y-1.5">
+          <div class="${roleCardClass}">
             <div class="flex items-start justify-between gap-2">
-              <span class="text-sm font-semibold text-white">${r.title}</span>
+              <div class="space-y-0.5">
+                <span class="text-sm font-semibold text-white cursor-pointer hover:text-blue-300 transition" onclick="setRoleHighlight('${r.category}')">${r.title}</span>
+                ${isHighlighted ? '<div class="text-[9px] font-bold text-blue-400 uppercase tracking-wider flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> Highlighted Role Match</div>' : ''}
+              </div>
               <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded ${badgeClass}">${badgeLabel}</span>
             </div>
+
             <div class="flex items-center gap-3 text-xs text-slate-400">
               <span class="flex items-center gap-1 ${isPublished ? 'text-emerald-400 font-bold' : 'text-slate-400 italic font-medium'}">
                 <i data-lucide="circle-dollar-sign" class="w-3.5 h-3.5"></i> ${payDisplay}
@@ -292,7 +490,22 @@
                 <i data-lucide="clock" class="w-3.5 h-3.5"></i> ${r.hours_or_shift ? r.hours_or_shift.split(' on ')[0] : 'Voting Day Shift'}
               </span>
             </div>
-            <p class="text-[11px] text-slate-500 italic">${r.pay_source_notes || ''}</p>
+
+            <!-- Expandable Duties Drawer Toggle -->
+            <div class="pt-1 border-t border-slate-800/60 flex items-center justify-between">
+              <button onclick="toggleRoleDuties('${roleId}')" class="text-[11px] text-slate-400 hover:text-slate-200 flex items-center gap-1 transition font-medium">
+                <span>View Responsibilities</span>
+                <i data-lucide="chevron-down" id="icon-${roleId}" class="w-3 h-3 transition-transform duration-200"></i>
+              </button>
+              <button onclick="openRoleComparisonModal('${r.category}')" class="text-[11px] text-blue-400 hover:text-blue-300 font-medium" title="Compare this role across all cities">
+                Compare Across Cities →
+              </button>
+            </div>
+
+            <div id="desc-${roleId}" class="hidden pt-2 text-[11px] text-slate-300 bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 leading-relaxed">
+              <strong class="text-blue-300 block mb-1">Key Responsibilities:</strong>
+              ${descText}
+            </div>
           </div>
         `;
       }).join('');
@@ -360,6 +573,74 @@
       `;
 
       return card;
+    }
+
+    function openRoleComparisonModal(category) {
+      const cat = category || activeRoleHighlight || 'DRO';
+      const meta = ROLE_METADATA[cat] || { title: cat, description: '' };
+
+      document.getElementById('modal-role-title').innerText = `${meta.title} — Cross-Ontario Comparison`;
+      document.getElementById('modal-role-description').innerText = meta.description;
+
+      const listContainer = document.getElementById('modal-role-list');
+      listContainer.innerHTML = '';
+
+      let matches = [];
+
+      for (const [muniName, m] of Object.entries(allData)) {
+        (m.roles || []).forEach(r => {
+          if (r.category === cat || (!meta && r.title.toLowerCase().includes(cat.toLowerCase()))) {
+            matches.push({ muniName, muni: m, role: r });
+          }
+        });
+      }
+
+      document.getElementById('modal-total-count').innerText = `${matches.length} municipalities offer this role`;
+
+      matches.forEach(item => {
+        const isPublished = item.role.pay_status === 'ACTUAL_PUBLISHED' && !!item.role.pay_actual_raw;
+        const payDisplay = isPublished ? item.role.pay_actual_raw : 'Not available';
+        const hasApply = Boolean(item.muni.has_direct_apply && (item.muni.status === 'Accepting Applications' || item.muni.status === 'Applications Open'));
+
+        const row = document.createElement('div');
+        row.className = "bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-slate-700 transition";
+        row.innerHTML = `
+          <div>
+            <div class="flex items-center gap-2">
+              <h4 class="text-sm font-bold text-white">${item.muniName}</h4>
+              <span class="text-[10px] text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">${item.muni.region || 'Ontario'}</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs text-slate-400 mt-1">
+              <span class="${isPublished ? 'text-emerald-400 font-bold' : 'text-slate-400 italic'}">
+                ${payDisplay}
+              </span>
+              <span>•</span>
+              <span>${item.role.hours_or_shift ? item.role.hours_or_shift.split(' on ')[0] : 'Voting Day'}</span>
+              <span>•</span>
+              <span>Min Age: ${item.role.min_age}+</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            ${hasApply 
+              ? `<a href="${item.muni.apply_url}" target="_blank" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1">
+                   <i data-lucide="send" class="w-3 h-3"></i> Apply
+                 </a>`
+              : `<a href="${item.muni.election_portal_url}" target="_blank" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition border border-slate-700 flex items-center gap-1">
+                   <i data-lucide="book-open" class="w-3 h-3"></i> Portal Info
+                 </a>`
+            }
+          </div>
+        `;
+        listContainer.appendChild(row);
+      });
+
+      document.getElementById('role-comparison-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeRoleComparisonModal() {
+      document.getElementById('role-comparison-modal').classList.add('hidden');
     }
 
     loadData();

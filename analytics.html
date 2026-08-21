@@ -357,6 +357,7 @@
             pay_actual_raw: r.pay_actual_raw,
             pay_display: isPublished ? r.pay_actual_raw : 'Not available',
             has_direct_apply: Boolean(info.has_direct_apply && (info.status === 'Accepting Applications' || info.status === 'Applications Open')),
+            description: r.description || 'Statutory election day polling official role under Ontario Municipal Elections Act, 1996.',
             hours: r.hours_or_shift || '8:30 AM - 9:00 PM on Oct 26, 2026',
             min_age: r.min_age || 18,
             apply_url: info.apply_url,
@@ -587,7 +588,10 @@
             ${isLondon ? '<i data-lucide="anchor" class="w-3.5 h-3.5 text-emerald-400"></i>' : ''} ${r.municipality}
           </td>
           <td class="py-3 px-3 text-slate-400">${r.region}</td>
-          <td class="py-3 px-4 text-blue-300 font-semibold">${r.title}</td>
+          <td class="py-3 px-4">
+            <div class="text-blue-300 font-semibold">${r.title}</div>
+            <div class="text-[10px] text-slate-400 mt-0.5 max-w-xs truncate" title="${r.description}">${r.description}</div>
+          </td>
           <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">${r.category}</span></td>
           <td class="py-3 px-3">${statusBadge}</td>
           <td class="py-3 px-3 ${isPublished ? 'text-emerald-400 font-bold' : 'text-slate-400 italic'}">${r.pay_display}</td>

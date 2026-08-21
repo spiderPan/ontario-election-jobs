@@ -65,8 +65,11 @@ class HtmlPortalScraper(BaseScraper):
             # Check if this municipality has confirmed, verified actual rates
             if self.municipality in CONFIRMED_ACTUAL_RATES:
                 confirmed_info = CONFIRMED_ACTUAL_RATES[self.municipality]
-                roles = [
-                    ElectionRole(
+                roles = []
+                for r in confirmed_info["roles"]:
+                    role_meta = next((dr for dr in ROLE_DEFINITIONS if dr["category"] == r["category"]), {})
+                    desc = r.get("description") or role_meta.get("description", f"Official 2026 election position for {self.municipality}.")
+                    roles.append(ElectionRole(
                         title=r["title"],
                         role_category=r["category"],
                         pay_status="ACTUAL_PUBLISHED",
@@ -77,10 +80,8 @@ class HtmlPortalScraper(BaseScraper):
                         training_pay=r["training_pay"],
                         hours_or_shift=r["hours_or_shift"],
                         min_age=r["min_age"],
-                        description=f"Official 2026 election official position for {self.municipality}."
-                    )
-                    for r in confirmed_info["roles"]
-                ]
+                        description=desc
+                    ))
             else:
                 # Parse or model benchmark estimate
                 roles = extract_roles_from_content(text)

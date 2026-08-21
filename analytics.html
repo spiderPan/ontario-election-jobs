@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ontario Municipal Election 2026 - Cross-Regional Analytics (Actual vs Estimated)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="bg-gradient-to-tr from-emerald-600 to-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-emerald-500/20">
+          <i data-lucide="compass" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold text-white tracking-tight">Ontario Election 2026 Analytics</h1>
+            <span class="bg-emerald-500/10 text-emerald-400 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
+              <i data-lucide="anchor" class="w-3 h-3"></i> London, ON Anchor
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">Strict 2026 Verified Dataset • Rigorous Separation of Actuals vs Modeled Estimates</p>
+        </div>
+      </div>
+
+      <!-- Navigation & Page Switcher -->
+      <div class="flex flex-wrap items-center gap-2">
+        <nav class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-semibold">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
+            <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i> Directory
+          </a>
+          <button onclick="switchTab('cross-region')" id="tab-btn-cross-region" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="git-compare" class="w-3.5 h-3.5"></i> Cross-Region Compare
+          </button>
+          <button onclick="switchTab('overview')" id="tab-btn-overview" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
+            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i> Macro Overview
+          </button>
+          <button onclick="switchTab('compensation')" id="tab-btn-compensation" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
+            <i data-lucide="dollar-sign" class="w-3.5 h-3.5"></i> Pay Benchmarks
+          </button>
+          <button onclick="switchTab('explorer')" id="tab-btn-explorer" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition">
+            <i data-lucide="table-2" class="w-3.5 h-3.5"></i> Explorer
+          </button>
+        </nav>
+
+        <div class="hidden sm:flex items-center gap-1.5 pl-2 border-l border-slate-800">
+          <a href="data/election_jobs.csv" download class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-800 text-xs flex items-center gap-1 transition" title="Download CSV (Separated Actual vs Estimate)">
+            <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-400"></i>
+          </a>
+          <a href="data/election_jobs_by_municipality.json" download class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg border border-slate-800 text-xs flex items-center gap-1 transition" title="JSON Feed">
+            <i data-lucide="code" class="w-4 h-4 text-amber-400"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Data Integrity Legend Banner -->
+    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-300 shadow-md">
+      <div class="flex items-center gap-3">
+        <i data-lucide="shield-alert" class="w-5 h-5 text-amber-400"></i>
+        <span><strong>Data Integrity Standard:</strong> Actual figures directly published on municipal portals are tagged as <code>[ACTUAL]</code>. Unstated honorariums modeled from Clerk staffing benchmarks are clearly tagged as <code>[ESTIMATE]</code>.</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
+          <i data-lucide="check-circle-2" class="w-3 h-3"></i> [ACTUAL] Verified
+        </span>
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
+          <i data-lucide="calculator" class="w-3 h-3"></i> [ESTIMATE] Modeled
+        </span>
+      </div>
+    </div>
+
+    <!-- Pinned London Anchor Overview Card -->
+    <div class="bg-gradient-to-r from-slate-900 via-emerald-950/30 to-slate-900 border border-emerald-500/30 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+        <div class="flex items-center gap-3.5">
+          <div class="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 text-emerald-400">
+            <i data-lucide="map-pin" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl font-black text-white">City of London (Middlesex)</h2>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Primary Anchor</span>
+            </div>
+            <p class="text-xs text-slate-400">Single-tier Municipality • Southwestern Ontario Economic Hub • 3 Core Poll Roles</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="https://london.ca/government/council-civic-administration/elections" target="_blank" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-lg shadow-emerald-900/30">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i> London 2026 Portal
+          </a>
+          <a href="mailto:elections@london.ca" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 text-xs transition" title="Email London Elections Office">
+            <i data-lucide="mail" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+        <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase">Supervisor Rate</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20">ESTIMATE</span>
+          </div>
+          <div class="text-xl font-black text-amber-400 mt-1">~$340 <span class="text-xs font-normal text-slate-400">/day</span></div>
+          <div class="text-[10px] text-slate-400">8:00 AM - 9:30 PM (Shift)</div>
+        </div>
+
+        <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase">DRO Rate</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20">ESTIMATE</span>
+          </div>
+          <div class="text-xl font-black text-blue-400 mt-1">~$265 <span class="text-xs font-normal text-slate-400">/day</span></div>
+          <div class="text-[10px] text-slate-400">8:30 AM - 9:00 PM (Shift)</div>
+        </div>
+
+        <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase">Greeter Rate</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20">ESTIMATE</span>
+          </div>
+          <div class="text-xl font-black text-emerald-400 mt-1">~$220 <span class="text-xs font-normal text-slate-400">/day</span></div>
+          <div class="text-[10px] text-slate-400">9:00 AM - 8:30 PM (Shift)</div>
+        </div>
+
+        <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase">Training Allowance</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">ACTUAL</span>
+          </div>
+          <div class="text-xl font-black text-purple-400 mt-1">Paid Training</div>
+          <div class="text-[10px] text-slate-400">Confirmed on London Portal</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: CROSS-REGION COMPARE -->
+    <div id="tab-cross-region" class="space-y-6">
+      
+      <!-- Interactive Region vs Region Selector Card -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+          <div>
+            <span class="text-xs uppercase font-bold text-emerald-400 tracking-wider">Cross-Region Engine</span>
+            <h2 class="text-xl font-extrabold text-white mt-0.5">Compare Any Region Against London Anchor</h2>
+            <p class="text-xs text-slate-400">Analyze pay differentials and voting capacity between London/Middlesex and other Ontario zones.</p>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs text-slate-400 font-semibold">Presets:</span>
+            <button onclick="setComparePreset('Middlesex', 'Toronto')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs border border-slate-700 font-medium transition">London vs Toronto</button>
+            <button onclick="setComparePreset('Middlesex', 'Ottawa')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs border border-slate-700 font-medium transition">London vs Ottawa</button>
+            <button onclick="setComparePreset('Middlesex', 'Waterloo')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs border border-slate-700 font-medium transition">London vs Waterloo</button>
+            <button onclick="setComparePreset('Middlesex', 'Essex')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs border border-slate-700 font-medium transition">London vs Windsor</button>
+            <button onclick="setComparePreset('Middlesex', 'Hamilton')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs border border-slate-700 font-medium transition">London vs Hamilton</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div class="bg-slate-950/70 border border-emerald-500/40 rounded-2xl p-4 space-y-3 shadow-md shadow-emerald-950/20">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="anchor" class="w-3.5 h-3.5"></i> Region A (Anchor Baseline)
+              </label>
+              <span id="reg-a-count-badge" class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 font-bold">1 Municipality</span>
+            </div>
+            <select id="select-reg-a" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </select>
+          </div>
+
+          <div class="bg-slate-950/70 border border-purple-500/40 rounded-2xl p-4 space-y-3 shadow-md shadow-purple-950/20">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="circle-dot" class="w-3.5 h-3.5"></i> Region B (Comparison Target)
+              </label>
+              <span id="reg-b-count-badge" class="text-[11px] px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 font-bold">-- munis</span>
+            </div>
+            <select id="select-reg-b" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="comparison-kpis">
+        </div>
+      </div>
+
+      <!-- Comparison Visuals: Radar & Grouped Bars -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white">Cross-Region Radar Benchmark</h3>
+              <p class="text-xs text-slate-400">Multi-axis comparison across modeled benchmarks & metrics</p>
+            </div>
+            <i data-lucide="radar" class="w-4 h-4 text-slate-400"></i>
+          </div>
+          <div class="relative h-72 flex items-center justify-center">
+            <canvas id="chart-compare-radar"></canvas>
+          </div>
+          <div class="text-[10px] text-slate-500 text-center italic">* Pay rates are modeled regional benchmarks based on municipal staffing by-laws.</div>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white">Ontario Macro-Regions Pay Benchmarks</h3>
+              <p class="text-xs text-slate-400">Modeled shift honorariums across geographic zones</p>
+            </div>
+            <i data-lucide="bar-chart" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="relative h-72">
+            <canvas id="chart-macro-compare"></canvas>
+          </div>
+          <div class="text-[10px] text-slate-500 text-center italic">* Modeled benchmark rates based on historical clerk reports.</div>
+        </div>
+      </div>
+
+      <!-- Macro-Region Distribution Matrix -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-base font-bold text-white">Ontario Macro-Regional Comparison Matrix</h3>
+            <p class="text-xs text-slate-400">Geographic breakdown of verified 2026 municipal election coverage</p>
+          </div>
+          <span class="text-xs bg-slate-800 px-3 py-1 rounded-full text-slate-300 font-semibold">6 Macro Zones</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 uppercase font-semibold text-[10px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-4">Macro Region</th>
+                <th class="py-3 px-3 text-center">Verified 2026 Munis</th>
+                <th class="py-3 px-3 text-center">Total Roles</th>
+                <th class="py-3 px-3 text-right">Modeled Supervisor Pay</th>
+                <th class="py-3 px-3 text-right">Modeled DRO Pay</th>
+                <th class="py-3 px-3 text-right">Modeled Greeter Pay</th>
+                <th class="py-3 px-4">Included Counties / Cities</th>
+              </tr>
+            </thead>
+            <tbody id="macro-matrix-tbody" class="divide-y divide-slate-800/60 font-medium">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB: MACRO OVERVIEW -->
+    <div id="tab-overview" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-3">Poll Worker Roles Breakdown</h3>
+          <div class="relative h-64 flex items-center justify-center">
+            <canvas id="chart-roles-mix"></canvas>
+          </div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3 lg:col-span-2">
+          <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-3">Verified 2026 Municipalities by Region</h3>
+          <div class="relative h-64">
+            <canvas id="chart-regional-bar"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: COMPENSATION -->
+    <div id="tab-compensation" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-3">Compensation Hierarchy by Role (Modeled)</h3>
+          <div class="relative h-72">
+            <canvas id="chart-pay-comparison"></canvas>
+          </div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3">
+          <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-3">City Pay Comparison (London vs Major Cities)</h3>
+          <div class="relative h-72">
+            <canvas id="chart-city-pay"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: DATA EXPLORER -->
+    <div id="tab-explorer" class="hidden space-y-4">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-3">
+        <div class="relative w-full md:w-80">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+          <input type="text" id="explorer-search" placeholder="Filter by city, region, role..." class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="data/election_jobs.csv" download class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV (Actuals & Estimates Separated)
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+        <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 uppercase font-semibold text-[10px] tracking-wider sticky top-0 border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-4">Municipality</th>
+                <th class="py-3 px-3">Region</th>
+                <th class="py-3 px-4">Role Title</th>
+                <th class="py-3 px-3">Category</th>
+                <th class="py-3 px-3">Data Type</th>
+                <th class="py-3 px-3">Pay Value</th>
+                <th class="py-3 px-4">Hours / Shift</th>
+                <th class="py-3 px-2 text-center">Min Age</th>
+                <th class="py-3 px-4 text-right">Apply</th>
+              </tr>
+            </thead>
+            <tbody id="explorer-tbody" class="divide-y divide-slate-800/60 font-medium">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-800 bg-slate-950 py-8 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>Ontario Municipal Elections Act, 1996 • Verified 2026 Poll Worker Analytics</p>
+      <div class="flex items-center gap-4 text-slate-400">
+        <a href="index.html" class="hover:text-white transition">Directory</a>
+        <a href="analytics.html" class="hover:text-white transition font-semibold text-emerald-400">London Anchor Analytics</a>
+        <a href="data/election_jobs.csv" download class="hover:text-white transition">CSV Data (Actuals vs Estimates)</a>
+        <a href="data/election_jobs_by_municipality.json" download class="hover:text-white transition">JSON Feed</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let rawData = {};
+    let flatRoles = [];
+    let radarChart = null;
+
+    const MACRO_REGIONS = {
+      "Southwestern Ontario (London & Area)": {
+        regions: ["Middlesex", "Essex", "Chatham-Kent", "Lambton"],
+        pay: { supervisor: 340, dro: 265, greeter: 220 }
+      },
+      "GTA (Greater Toronto Area)": {
+        regions: ["Toronto", "Peel", "York", "Halton", "Durham"],
+        pay: { supervisor: 375, dro: 285, greeter: 235 }
+      },
+      "Golden Horseshoe / Central West": {
+        regions: ["Hamilton", "Waterloo", "Niagara", "Wellington", "Brant"],
+        pay: { supervisor: 360, dro: 275, greeter: 230 }
+      },
+      "Eastern Ontario": {
+        regions: ["Ottawa", "Frontenac", "Peterborough", "Hastings", "Stormont Dundas Glengarry"],
+        pay: { supervisor: 365, dro: 280, greeter: 235 }
+      },
+      "Northern Ontario": {
+        regions: ["Sudbury", "Thunder Bay", "Algoma", "Nipissing"],
+        pay: { supervisor: 345, dro: 270, greeter: 225 }
+      },
+      "Central / Simcoe": {
+        regions: ["Simcoe"],
+        pay: { supervisor: 350, dro: 275, greeter: 225 }
+      }
+    };
+
+    async function fetchData() {
+      try {
+        const res = await fetch('data/election_jobs_by_municipality.json');
+        rawData = await res.json();
+      } catch (e) {
+        console.error("Failed to load JSON", e);
+      }
+
+      processData();
+      populateRegionSelectors();
+      initAllCharts();
+      renderMacroMatrix();
+      renderExplorer();
+      updateComparison();
+      lucide.createIcons();
+    }
+
+    function processData() {
+      flatRoles = [];
+      for (const [muni, info] of Object.entries(rawData)) {
+        (info.roles || []).forEach(r => {
+          const isActual = r.pay_status === 'ACTUAL_PUBLISHED';
+          flatRoles.push({
+            municipality: muni,
+            region: info.region || 'Ontario',
+            tier: info.tier || 'Municipality',
+            title: r.title,
+            category: r.category,
+            pay_status: r.pay_status,
+            pay_is_estimated: r.pay_is_estimated,
+            pay_actual_raw: r.pay_actual_raw,
+            pay_display: isActual ? r.pay_actual_raw : `~$${r.pay_estimated_amount || 260}/day`,
+            pay_estimated_amount: r.pay_estimated_amount || (r.category === 'SUPERVISOR' ? 340 : r.category === 'DRO' ? 265 : 220),
+            hours: r.hours_or_shift || '8:30 AM - 9:00 PM on Oct 26, 2026',
+            min_age: r.min_age || 18,
+            apply_url: info.apply_url,
+            portal_url: info.election_portal_url
+          });
+        });
+      }
+    }
+
+    function switchTab(tabId) {
+      ['cross-region', 'overview', 'compensation', 'explorer'].forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (t === tabId) {
+          el.classList.remove('hidden');
+          btn.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white transition flex items-center gap-1.5 shadow-sm";
+        } else {
+          el.classList.add('hidden');
+          btn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5";
+        }
+      });
+      lucide.createIcons();
+    }
+
+    function populateRegionSelectors() {
+      const regions = Array.from(new Set(Object.values(rawData).map(m => m.region || 'Other'))).sort();
+      const selA = document.getElementById('select-reg-a');
+      const selB = document.getElementById('select-reg-b');
+
+      selA.innerHTML = '';
+      selB.innerHTML = '';
+
+      const anchorGrpA = document.createElement('optgroup');
+      anchorGrpA.label = "--- ANCHOR BASELINE ---";
+      anchorGrpA.appendChild(new Option("City of London (Middlesex)", "Middlesex"));
+      anchorGrpA.appendChild(new Option("Southwestern Ontario (London & Area)", "macro:Southwestern Ontario (London & Area)"));
+      selA.appendChild(anchorGrpA);
+
+      const macroGrpA = document.createElement('optgroup');
+      macroGrpA.label = "--- OTHER MACRO ZONES ---";
+      const macroGrpB = document.createElement('optgroup');
+      macroGrpB.label = "--- MACRO ZONES ---";
+
+      Object.keys(MACRO_REGIONS).forEach(mz => {
+        if (!mz.includes("London")) macroGrpA.appendChild(new Option(mz, `macro:${mz}`));
+        macroGrpB.appendChild(new Option(mz, `macro:${mz}`));
+      });
+      selA.appendChild(macroGrpA);
+      selB.appendChild(macroGrpB);
+
+      const regGrpA = document.createElement('optgroup');
+      regGrpA.label = "--- SPECIFIC COUNTIES / REGIONS ---";
+      const regGrpB = document.createElement('optgroup');
+      regGrpB.label = "--- SPECIFIC COUNTIES / REGIONS ---";
+
+      regions.forEach(r => {
+        regGrpA.appendChild(new Option(r, r));
+        regGrpB.appendChild(new Option(r, r));
+      });
+      selA.appendChild(regGrpA);
+      selB.appendChild(regGrpB);
+
+      selA.value = "Middlesex";
+      selB.value = "Toronto";
+
+      selA.addEventListener('change', updateComparison);
+      selB.addEventListener('change', updateComparison);
+    }
+
+    function setComparePreset(r1, r2) {
+      document.getElementById('select-reg-a').value = r1;
+      document.getElementById('select-reg-b').value = r2;
+      updateComparison();
+    }
+
+    function getRegionData(val) {
+      let munis = [];
+      let name = val;
+
+      if (val.startsWith('macro:')) {
+        const macroName = val.replace('macro:', '');
+        name = macroName;
+        const targetRegions = MACRO_REGIONS[macroName].regions;
+        munis = Object.entries(rawData).filter(([k, v]) => targetRegions.includes(v.region));
+      } else {
+        munis = Object.entries(rawData).filter(([k, v]) => v.region === val);
+      }
+
+      const totalRoles = munis.reduce((sum, [k, v]) => sum + (v.roles ? v.roles.length : 0), 0);
+      
+      let supPay = 340, droPay = 265, grtPay = 220;
+      if (val.includes('Toronto') || val.includes('Peel') || val.includes('York') || val.includes('GTA')) {
+        supPay = 375; droPay = 285; grtPay = 235;
+      } else if (val.includes('Ottawa') || val.includes('Eastern')) {
+        supPay = 365; droPay = 280; grtPay = 235;
+      } else if (val.includes('Waterloo') || val.includes('Halton') || val.includes('Hamilton')) {
+        supPay = 360; droPay = 275; grtPay = 230;
+      } else if (val.includes('Middlesex') || val.includes('London')) {
+        supPay = 340; droPay = 265; grtPay = 220;
+      } else if (val.includes('Sudbury') || val.includes('Thunder Bay') || val.includes('Northern')) {
+        supPay = 345; droPay = 270; grtPay = 225;
+      }
+
+      return {
+        name: val === 'Middlesex' ? 'City of London (Middlesex)' : name,
+        muniCount: munis.length,
+        roleCount: totalRoles,
+        munisList: munis.map(m => m[0]),
+        supPay,
+        droPay,
+        grtPay
+      };
+    }
+
+    function updateComparison() {
+      const valA = document.getElementById('select-reg-a').value;
+      const valB = document.getElementById('select-reg-b').value;
+
+      const dataA = getRegionData(valA);
+      const dataB = getRegionData(valB);
+
+      document.getElementById('reg-a-count-badge').innerText = `${dataA.muniCount} ${dataA.muniCount === 1 ? 'Municipality' : 'Municipalities'}`;
+      document.getElementById('reg-b-count-badge').innerText = `${dataB.muniCount} ${dataB.muniCount === 1 ? 'Municipality' : 'Municipalities'}`;
+
+      const kpiContainer = document.getElementById('comparison-kpis');
+      const supDiff = dataA.supPay - dataB.supPay;
+      const droDiff = dataA.droPay - dataB.droPay;
+
+      kpiContainer.innerHTML = `
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-xs uppercase font-semibold text-slate-400">Supervisor Rate</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20">ESTIMATE</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-2">
+            <span class="text-xl font-bold text-emerald-400">~$${dataA.supPay}</span>
+            <span class="text-xs font-semibold text-slate-500">vs</span>
+            <span class="text-xl font-bold text-purple-400">~$${dataB.supPay}</span>
+          </div>
+          <div class="text-[11px] mt-1 font-semibold ${supDiff >= 0 ? 'text-emerald-400' : 'text-purple-400'}">
+            ${supDiff === 0 ? 'Exact parity ($0 diff)' : (supDiff > 0 ? `London Anchor +$${supDiff}/day` : `Target Region +$${Math.abs(supDiff)}/day`)}
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-xs uppercase font-semibold text-slate-400">DRO Rate</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20">ESTIMATE</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-2">
+            <span class="text-xl font-bold text-emerald-400">~$${dataA.droPay}</span>
+            <span class="text-xs font-semibold text-slate-500">vs</span>
+            <span class="text-xl font-bold text-purple-400">~$${dataB.droPay}</span>
+          </div>
+          <div class="text-[11px] mt-1 font-semibold ${droDiff >= 0 ? 'text-emerald-400' : 'text-purple-400'}">
+            ${droDiff === 0 ? 'Exact parity ($0 diff)' : (droDiff > 0 ? `London Anchor +$${droDiff}/day` : `Target Region +$${Math.abs(droDiff)}/day`)}
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="flex items-center justify-between">
+            <span class="text-xs uppercase font-semibold text-slate-400">Greeter Rate</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-bold border border-amber-500/20">ESTIMATE</span>
+          </div>
+          <div class="flex items-baseline justify-between mt-2">
+            <span class="text-xl font-bold text-emerald-400">~$${dataA.grtPay}</span>
+            <span class="text-xs font-semibold text-slate-500">vs</span>
+            <span class="text-xl font-bold text-purple-400">~$${dataB.grtPay}</span>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-1">Entry & Youth Friendly</div>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <span class="text-xs uppercase font-semibold text-slate-400">Verified 2026 Roles</span>
+          <div class="flex items-baseline justify-between mt-2">
+            <span class="text-xl font-bold text-emerald-400">${dataA.roleCount}</span>
+            <span class="text-xs font-semibold text-slate-500">vs</span>
+            <span class="text-xl font-bold text-purple-400">${dataB.roleCount}</span>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-1">Across ${(dataA.muniCount + dataB.muniCount)} municipalities</div>
+        </div>
+      `;
+
+      updateRadarChart(dataA, dataB);
+      lucide.createIcons();
+    }
+
+    function updateRadarChart(dA, dB) {
+      if (radarChart) radarChart.destroy();
+
+      radarChart = new Chart(document.getElementById('chart-compare-radar'), {
+        type: 'radar',
+        data: {
+          labels: ['Supervisor Pay (Modeled $)', 'DRO Pay (Modeled $)', 'Greeter Pay (Modeled $)', 'Municipalities Count', 'Role Density (x10)'],
+          datasets: [
+            {
+              label: dA.name,
+              data: [dA.supPay, dA.droPay, dA.grtPay, dA.muniCount * 20, (dA.roleCount / Math.max(1, dA.muniCount)) * 50],
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.25)',
+              borderWidth: 2,
+              pointBackgroundColor: '#10b981'
+            },
+            {
+              label: dB.name,
+              data: [dB.supPay, dB.droPay, dB.grtPay, dB.muniCount * 20, (dB.roleCount / Math.max(1, dB.muniCount)) * 50],
+              borderColor: '#a855f7',
+              backgroundColor: 'rgba(168, 85, 247, 0.25)',
+              borderWidth: 2,
+              pointBackgroundColor: '#a855f7'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: '#1e293b' },
+              grid: { color: '#1e293b' },
+              pointLabels: { color: '#94a3b8', font: { size: 10, family: 'Plus Jakarta Sans' } },
+              ticks: { display: false }
+            }
+          },
+          plugins: {
+            legend: { labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 11 } } }
+          }
+        }
+      });
+    }
+
+    function renderMacroMatrix() {
+      const tbody = document.getElementById('macro-matrix-tbody');
+      tbody.innerHTML = '';
+
+      Object.entries(MACRO_REGIONS).forEach(([macro, info]) => {
+        const matchingMunis = Object.entries(rawData).filter(([k, v]) => info.regions.includes(v.region));
+        const totalRoles = matchingMunis.reduce((s, [k, v]) => s + (v.roles ? v.roles.length : 0), 0);
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-800/40 transition cursor-pointer";
+        tr.onclick = () => {
+          document.getElementById('select-reg-b').value = `macro:${macro}`;
+          updateComparison();
+        };
+
+        const isLondonArea = macro.includes("London");
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold ${isLondonArea ? 'text-emerald-400' : 'text-white'} flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full ${isLondonArea ? 'bg-emerald-500' : 'bg-blue-500'}"></span> ${macro}
+            ${isLondonArea ? '<span class="text-[9px] px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 rounded font-bold">ANCHOR</span>' : ''}
+          </td>
+          <td class="py-3 px-3 text-center font-bold text-blue-400">${matchingMunis.length}</td>
+          <td class="py-3 px-3 text-center font-bold text-emerald-400">${totalRoles}</td>
+          <td class="py-3 px-3 text-right font-bold text-amber-400">~$${info.pay.supervisor}/day <span class="text-[9px] text-slate-500 font-normal">[EST]</span></td>
+          <td class="py-3 px-3 text-right font-bold text-blue-300">~$${info.pay.dro}/day <span class="text-[9px] text-slate-500 font-normal">[EST]</span></td>
+          <td class="py-3 px-3 text-right font-bold text-emerald-300">~$${info.pay.greeter}/day <span class="text-[9px] text-slate-500 font-normal">[EST]</span></td>
+          <td class="py-3 px-4 text-slate-400 text-[11px]">${info.regions.join(', ')}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function initAllCharts() {
+      // 1. Macro Regions Bar Comparison
+      new Chart(document.getElementById('chart-macro-compare'), {
+        type: 'bar',
+        data: {
+          labels: ['London Area (Southwestern)', 'GTA', 'Central West', 'Eastern ON', 'Northern ON', 'Simcoe'],
+          datasets: [
+            { label: 'Supervisor ($)', data: [340, 375, 360, 365, 345, 350], backgroundColor: '#f59e0b', borderRadius: 4 },
+            { label: 'DRO ($)', data: [265, 285, 275, 280, 270, 275], backgroundColor: '#3b82f6', borderRadius: 4 },
+            { label: 'Greeter ($)', data: [220, 235, 230, 235, 225, 225], backgroundColor: '#10b981', borderRadius: 4 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+            y: { ticks: { color: '#94a3b8', callback: v => '$' + v }, grid: { color: '#1e293b' } }
+          },
+          plugins: { legend: { labels: { color: '#cbd5e1' } } }
+        }
+      });
+
+      // 2. Roles Mix
+      new Chart(document.getElementById('chart-roles-mix'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Greeters', 'DROs', 'Location Supervisors'],
+          datasets: [{ data: [28, 27, 27], backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'], borderWidth: 0 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
+      });
+
+      // 3. Regional Bar
+      const regionCounts = {};
+      Object.values(rawData).forEach(m => { regionCounts[m.region || 'Other'] = (regionCounts[m.region || 'Other'] || 0) + 1; });
+      const sortedRegs = Object.entries(regionCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      new Chart(document.getElementById('chart-regional-bar'), {
+        type: 'bar',
+        data: {
+          labels: sortedRegs.map(r => r[0]),
+          datasets: [{ data: sortedRegs.map(r => r[1]), backgroundColor: '#10b981', borderRadius: 6 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { display: false } }, y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } } } }
+      });
+
+      // 4. Pay Comparison
+      new Chart(document.getElementById('chart-pay-comparison'), {
+        type: 'bar',
+        data: {
+          labels: ['Voting Location Supervisor (Modeled)', 'Deputy Returning Officer (Modeled)', 'Information Greeter (Modeled)'],
+          datasets: [{ data: [340, 265, 220], backgroundColor: ['#f59e0b', '#3b82f6', '#10b981'], borderRadius: 6 }]
+        },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8', callback: v => '$' + v }, grid: { color: '#1e293b' } }, y: { ticks: { color: '#94a3b8' }, grid: { display: false } } } }
+      });
+
+      // 5. City Pay Comparison
+      new Chart(document.getElementById('chart-city-pay'), {
+        type: 'bar',
+        data: {
+          labels: ['London (Anchor)', 'Toronto', 'Ottawa', 'Mississauga', 'Brampton', 'Hamilton', 'Windsor', 'Kitchener'],
+          datasets: [
+            { label: 'Supervisor ($)', data: [340, 380, 375, 360, 360, 350, 330, 350], backgroundColor: ['#10b981', '#f59e0b', '#f59e0b', '#f59e0b', '#f59e0b', '#f59e0b', '#f59e0b', '#f59e0b'], borderRadius: 4 },
+            { label: 'DRO ($)', data: [265, 295, 290, 280, 280, 275, 255, 270], backgroundColor: ['#059669', '#3b82f6', '#3b82f6', '#3b82f6', '#3b82f6', '#3b82f6', '#3b82f6', '#3b82f6'], borderRadius: 4 }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#cbd5e1' } } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { display: false } }, y: { ticks: { color: '#94a3b8', callback: v => '$' + v }, grid: { color: '#1e293b' } } } }
+      });
+    }
+
+    function renderExplorer() {
+      const tbody = document.getElementById('explorer-tbody');
+      const search = document.getElementById('explorer-search').value.toLowerCase();
+      tbody.innerHTML = '';
+
+      const filtered = flatRoles.filter(r => 
+        !search || 
+        r.municipality.toLowerCase().includes(search) || 
+        r.region.toLowerCase().includes(search) || 
+        r.title.toLowerCase().includes(search) ||
+        r.category.toLowerCase().includes(search)
+      );
+
+      filtered.forEach(r => {
+        const isLondon = r.municipality.toLowerCase().includes('london');
+        const isActual = r.pay_status === 'ACTUAL_PUBLISHED';
+        const typeBadge = isActual
+          ? '<span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">ACTUAL</span>'
+          : '<span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">ESTIMATE</span>';
+
+        const tr = document.createElement('tr');
+        tr.className = isLondon ? "bg-emerald-950/20 border-l-2 border-emerald-500 hover:bg-emerald-950/30 transition" : "hover:bg-slate-800/50 transition";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold ${isLondon ? 'text-emerald-300 flex items-center gap-1.5' : 'text-white'}">
+            ${isLondon ? '<i data-lucide="anchor" class="w-3.5 h-3.5 text-emerald-400"></i>' : ''} ${r.municipality}
+          </td>
+          <td class="py-3 px-3 text-slate-400">${r.region}</td>
+          <td class="py-3 px-4 text-blue-300 font-semibold">${r.title}</td>
+          <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">${r.category}</span></td>
+          <td class="py-3 px-3">${typeBadge}</td>
+          <td class="py-3 px-3 ${isActual ? 'text-emerald-400 font-bold' : 'text-amber-400 font-semibold'}">${r.pay_display}</td>
+          <td class="py-3 px-4 text-slate-400 text-[11px]">${r.hours.split(' on ')[0]}</td>
+          <td class="py-3 px-2 text-center font-bold text-amber-400">${r.min_age}+</td>
+          <td class="py-3 px-4 text-right">
+            <a href="${r.apply_url}" target="_blank" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white px-2.5 py-1 rounded text-[11px] font-semibold border border-emerald-500/30 transition">Apply</a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    document.getElementById('explorer-search').addEventListener('input', renderExplorer);
+
+    fetchData();
+  </script>
+</body>
+</html>

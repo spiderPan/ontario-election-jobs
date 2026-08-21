@@ -1,0 +1,371 @@
+[
+  {
+    "municipality": "City of Toronto",
+    "region": "Toronto",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.toronto.ca/elections",
+    "apply_url": "https://www.toronto.ca/elections",
+    "contact_email": "elections@toronto.ca"
+  },
+  {
+    "municipality": "City of Mississauga",
+    "region": "Peel",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://mississaugavotes.ca/",
+    "apply_url": "https://mississaugavotes.ca/work-with-us/",
+    "contact_email": "mississauga.votes@mississauga.ca"
+  },
+  {
+    "municipality": "City of Brampton",
+    "region": "Peel",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.brampton.ca/EN/City-Hall/Election/Pages/welcome.aspx",
+    "apply_url": "https://www.brampton.ca/EN/City-Hall/Election/Pages/welcome.aspx",
+    "contact_email": "election.office@brampton.ca"
+  },
+  {
+    "municipality": "City of Ottawa",
+    "region": "Ottawa",
+    "tier": "Single-tier",
+    "type": "workday_or_html",
+    "election_url": "https://ottawa.ca/en/city-hall/elections",
+    "apply_url": "https://ottawa.ca/en/city-hall/elections",
+    "contact_email": "elections@ottawa.ca"
+  },
+  {
+    "municipality": "City of Hamilton",
+    "region": "Hamilton",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.hamilton.ca/elections",
+    "apply_url": "https://www.hamilton.ca/elections",
+    "contact_email": "elections@hamilton.ca"
+  },
+  {
+    "municipality": "City of London",
+    "region": "Middlesex",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.london.ca/government/elections",
+    "apply_url": "https://www.london.ca/government/elections",
+    "contact_email": "elections@london.ca"
+  },
+  {
+    "municipality": "City of Markham",
+    "region": "York",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://elections.markham.ca/",
+    "apply_url": "https://elections.markham.ca/",
+    "contact_email": "vote@markham.ca"
+  },
+  {
+    "municipality": "City of Vaughan",
+    "region": "York",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.vaughan.ca/elections",
+    "apply_url": "https://www.vaughan.ca/elections",
+    "contact_email": "vaughanelections@vaughan.ca"
+  },
+  {
+    "municipality": "City of Kitchener",
+    "region": "Waterloo",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.kitchener.ca/en/council-and-city-admin/elections.aspx",
+    "apply_url": "https://www.kitchener.ca/en/council-and-city-admin/elections.aspx",
+    "contact_email": "election@kitchener.ca"
+  },
+  {
+    "municipality": "City of Windsor",
+    "region": "Essex",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.citywindsor.ca/city-hall/municipal-election",
+    "apply_url": "https://www.citywindsor.ca/city-hall/municipal-election",
+    "contact_email": "elections@citywindsor.ca"
+  },
+  {
+    "municipality": "Town of Oakville",
+    "region": "Halton",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.oakville.ca/town-hall/elections/",
+    "apply_url": "https://www.oakville.ca/town-hall/elections/",
+    "contact_email": "elections@oakville.ca"
+  },
+  {
+    "municipality": "City of Burlington",
+    "region": "Halton",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://myvoteburlington.ca/",
+    "apply_url": "https://myvoteburlington.ca/",
+    "contact_email": "elections@burlington.ca"
+  },
+  {
+    "municipality": "City of Richmond Hill",
+    "region": "York",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.richmondhill.ca/en/our-government/work-the-election.aspx",
+    "apply_url": "https://www.richmondhill.ca/en/our-government/work-the-election.aspx",
+    "contact_email": "candidates@richmondhill.ca"
+  },
+  {
+    "municipality": "City of Greater Sudbury",
+    "region": "Sudbury",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.greatersudbury.ca/elections",
+    "apply_url": "https://www.greatersudbury.ca/elections",
+    "contact_email": "election@greatersudbury.ca"
+  },
+  {
+    "municipality": "City of Oshawa",
+    "region": "Durham",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.oshawa.ca/elections",
+    "apply_url": "https://www.oshawa.ca/elections",
+    "contact_email": "elections@oshawa.ca"
+  },
+  {
+    "municipality": "City of Barrie",
+    "region": "Simcoe",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.barrie.ca/elections",
+    "apply_url": "https://www.barrie.ca/elections",
+    "contact_email": "barrievotes@barrie.ca"
+  },
+  {
+    "municipality": "City of Guelph",
+    "region": "Wellington",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://guelph.ca/city-hall/mayor-and-council/municipal-elections/",
+    "apply_url": "https://guelph.ca/city-hall/mayor-and-council/municipal-elections/",
+    "contact_email": "elections@guelph.ca"
+  },
+  {
+    "municipality": "Town of Whitby",
+    "region": "Durham",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.whitby.ca/elections",
+    "apply_url": "https://www.whitby.ca/elections",
+    "contact_email": "elections@whitby.ca"
+  },
+  {
+    "municipality": "City of Cambridge",
+    "region": "Waterloo",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.cambridge.ca/elections",
+    "apply_url": "https://www.cambridge.ca/elections",
+    "contact_email": "election@cambridge.ca"
+  },
+  {
+    "municipality": "City of Kingston",
+    "region": "Frontenac",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.cityofkingston.ca/city-hall/elections",
+    "apply_url": "https://www.cityofkingston.ca/city-hall/elections",
+    "contact_email": "elections@cityofkingston.ca"
+  },
+  {
+    "municipality": "City of Waterloo",
+    "region": "Waterloo",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.waterloo.ca/elections",
+    "apply_url": "https://www.waterloo.ca/elections",
+    "contact_email": "elections@waterloo.ca"
+  },
+  {
+    "municipality": "City of Thunder Bay",
+    "region": "Thunder Bay",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.thunderbay.ca/elections",
+    "apply_url": "https://www.thunderbay.ca/elections",
+    "contact_email": "elections@thunderbay.ca"
+  },
+  {
+    "municipality": "City of Brantford",
+    "region": "Brant",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.brantford.ca/elections",
+    "apply_url": "https://www.brantford.ca/elections",
+    "contact_email": "elections@brantford.ca"
+  },
+  {
+    "municipality": "City of Pickering",
+    "region": "Durham",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.pickering.ca/elections",
+    "apply_url": "https://www.pickering.ca/elections",
+    "contact_email": "elections@pickering.ca"
+  },
+  {
+    "municipality": "City of Niagara Falls",
+    "region": "Niagara",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://niagarafalls.ca/elections",
+    "apply_url": "https://niagarafalls.ca/elections",
+    "contact_email": "clerk@niagarafalls.ca"
+  },
+  {
+    "municipality": "City of Peterborough",
+    "region": "Peterborough",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.peterborough.ca/en/city-hall/election-employment.aspx",
+    "apply_url": "https://www.peterborough.ca/en/city-hall/election-employment.aspx",
+    "contact_email": "elections@peterborough.ca"
+  },
+  {
+    "municipality": "City of Sarnia",
+    "region": "Lambton",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.sarnia.ca/elections",
+    "apply_url": "https://www.sarnia.ca/elections",
+    "contact_email": "clerks@sarnia.ca"
+  },
+  {
+    "municipality": "Town of Newmarket",
+    "region": "York",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.newmarket.ca/elections/Pages/Work-at-an-Election.aspx",
+    "apply_url": "https://www.newmarket.ca/elections/Pages/Work-at-an-Election.aspx",
+    "contact_email": "elections@newmarket.ca"
+  },
+  {
+    "municipality": "City of Belleville",
+    "region": "Hastings",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.belleville.ca/en/city-hall/elections-employment.aspx",
+    "apply_url": "https://www.belleville.ca/en/city-hall/elections-employment.aspx",
+    "contact_email": "elections@belleville.ca"
+  },
+  {
+    "municipality": "Town of Milton",
+    "region": "Halton",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.milton.ca/en/town-hall/election-employment.aspx",
+    "apply_url": "https://www.milton.ca/en/town-hall/election-employment.aspx",
+    "contact_email": "elections@milton.ca"
+  },
+  {
+    "municipality": "Town of Halton Hills",
+    "region": "Halton",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.haltonhills.ca/en/your-government/work-the-election.aspx",
+    "apply_url": "https://www.haltonhills.ca/en/your-government/work-the-election.aspx",
+    "contact_email": "elections@haltonhills.ca"
+  },
+  {
+    "municipality": "Town of Ajax",
+    "region": "Durham",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.ajax.ca/elections",
+    "apply_url": "https://www.ajax.ca/elections",
+    "contact_email": "vote@ajax.ca"
+  },
+  {
+    "municipality": "Town of Aurora",
+    "region": "York",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.aurora.ca/en/your-government/work-at-an-election.aspx",
+    "apply_url": "https://www.aurora.ca/en/your-government/work-at-an-election.aspx",
+    "contact_email": "elections@aurora.ca"
+  },
+  {
+    "municipality": "City of St. Catharines",
+    "region": "Niagara",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.stcatharines.ca/elections",
+    "apply_url": "https://www.stcatharines.ca/elections",
+    "contact_email": "elections@stcatharines.ca"
+  },
+  {
+    "municipality": "City of Sault Ste. Marie",
+    "region": "Algoma",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://saultstemarie.ca/elections",
+    "apply_url": "https://saultstemarie.ca/elections",
+    "contact_email": "cityclerk@cityssm.on.ca"
+  },
+  {
+    "municipality": "City of North Bay",
+    "region": "Nipissing",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.northbay.ca/city-government/elections/work-the-election/",
+    "apply_url": "https://www.northbay.ca/city-government/elections/work-the-election/",
+    "contact_email": "elections@northbay.ca"
+  },
+  {
+    "municipality": "City of Cornwall",
+    "region": "Stormont Dundas Glengarry",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.cornwall.ca/elections",
+    "apply_url": "https://www.cornwall.ca/elections",
+    "contact_email": "clerk@cornwall.ca"
+  },
+  {
+    "municipality": "City of Chatham-Kent",
+    "region": "Chatham-Kent",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.chatham-kent.ca/localgovernment/elections/Pages/Work-the-Election.aspx",
+    "apply_url": "https://www.chatham-kent.ca/localgovernment/elections/Pages/Work-the-Election.aspx",
+    "contact_email": "ck_elections@chatham-kent.ca"
+  },
+  {
+    "municipality": "Town of Innisfil",
+    "region": "Simcoe",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://innisfil.ca/elections",
+    "apply_url": "https://innisfil.ca/elections",
+    "contact_email": "elections@innisfil.ca"
+  },
+  {
+    "municipality": "Town of Collingwood",
+    "region": "Simcoe",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.collingwood.ca/council-government/elections/work-the-election",
+    "apply_url": "https://www.collingwood.ca/council-government/elections/work-the-election",
+    "contact_email": "clerk@collingwood.ca"
+  },
+  {
+    "municipality": "Town of Caledon",
+    "region": "Peel",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.caledon.ca/elections",
+    "apply_url": "https://www.caledon.ca/elections",
+    "contact_email": "elections@caledon.ca"
+  }
+]

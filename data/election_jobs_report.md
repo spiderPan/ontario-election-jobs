@@ -2,10 +2,10 @@
 
 **Election Year:** 2026 (Strict Freshness Verified)  
 **General Voting Day:** Monday, October 26, 2026  
-**Verified 2026 Municipalities Tracked:** 28  
-**Verified 2026 Poll Roles:** 82  
+**Verified 2026 Municipalities Tracked:** 27  
+**Verified 2026 Poll Roles:** 79  
 **Roles with Confirmed Published Pay:** 6  
-**Roles with Modeled Staffing Benchmark:** 76  
+**Roles with Modeled Staffing Benchmark:** 73  
 
 > [!IMPORTANT]
 > **Data Integrity Notice:** Actual rates published on municipal portals are labeled as `[ACTUAL]`. Unstated honorariums modeled from municipal staffing schedules are labeled as `[ESTIMATE]`.
@@ -120,23 +120,6 @@
 - **Election Portal:** [https://www.greatersudbury.ca/city-hall/municipal-schoolboard-elections/](https://www.greatersudbury.ca/city-hall/municipal-schoolboard-elections/)
 - **Apply Directly:** [https://www.greatersudbury.ca/city-hall/municipal-schoolboard-elections/](https://www.greatersudbury.ca/city-hall/municipal-schoolboard-elections/)
 - **Contact:** `election@greatersudbury.ca`
-
-**Available Poll Positions (2026):**
-
-| Role Title | Category | Pay Type & Rate | Data Source | Shift Hours | Min Age |
-|---|---|---|---|---|---|
-| **Deputy Returning Officer (DRO)** | DRO | ~$275/day (Modeled) | `Estimated Benchmark` | 8:30 AM - 9:00 PM on October 26, 2026 | 18+ |
-| **Voting Location Supervisor (VLS)** | SUPERVISOR | ~$350/day (Modeled) | `Estimated Benchmark` | 8:30 AM - 9:00 PM on October 26, 2026 | 18+ |
-| **Information Assistant / Greeter** | GREETER | ~$225/day (Modeled) | `Estimated Benchmark` | 8:30 AM - 9:00 PM on October 26, 2026 | 16+ |
-
----
-
-### City of Guelph (Wellington)
-
-- **Status:** `Closed`
-- **Election Portal:** [https://guelph.ca/city-government/mayor-and-council/municipal-elections/](https://guelph.ca/city-government/mayor-and-council/municipal-elections/)
-- **Apply Directly:** [https://guelph.ca/city-government/mayor-and-council/municipal-elections/](https://guelph.ca/city-government/mayor-and-council/municipal-elections/)
-- **Contact:** `elections@guelph.ca`
 
 **Available Poll Positions (2026):**
 

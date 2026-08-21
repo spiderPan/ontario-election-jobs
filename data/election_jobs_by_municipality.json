@@ -62,7 +62,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:27.054826"
+    "scraped_at": "2026-08-21T19:24:53.603343"
   },
   "City of Brampton": {
     "municipality": "City of Brampton",
@@ -130,7 +130,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:29.586095"
+    "scraped_at": "2026-08-21T19:24:46.543353"
   },
   "City of Brantford": {
     "municipality": "City of Brantford",
@@ -195,7 +195,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:26.671617"
+    "scraped_at": "2026-08-21T19:24:52.481911"
   },
   "City of Burlington": {
     "municipality": "City of Burlington",
@@ -263,7 +263,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:22.549183"
+    "scraped_at": "2026-08-21T19:24:48.354034"
   },
   "City of Cambridge": {
     "municipality": "City of Cambridge",
@@ -329,7 +329,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:22.154461"
+    "scraped_at": "2026-08-21T19:24:47.854353"
   },
   "City of Cornwall": {
     "municipality": "City of Cornwall",
@@ -394,7 +394,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:25.735123"
+    "scraped_at": "2026-08-21T19:24:50.580274"
   },
   "City of Greater Sudbury": {
     "municipality": "City of Greater Sudbury",
@@ -462,75 +462,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:25.155093"
-  },
-  "City of Guelph": {
-    "municipality": "City of Guelph",
-    "region": "Wellington",
-    "tier": "Single-tier",
-    "status": "Closed",
-    "election_date": "October 26, 2026",
-    "election_year": "2026",
-    "is_verified_2026": true,
-    "election_portal_url": "https://guelph.ca/city-government/mayor-and-council/municipal-elections/",
-    "apply_url": "https://guelph.ca/city-government/mayor-and-council/municipal-elections/",
-    "contact_email": "elections@guelph.ca",
-    "contact_phone": "519-837-5625",
-    "requirements": [
-      "Legally entitled to work in Canada",
-      "At least 18 years of age (16+ for youth roles)",
-      "Politically neutral and not active on 2026 municipal candidate campaigns",
-      "Available for training session and Voting Day on October 26, 2026"
-    ],
-    "roles_count": 3,
-    "roles": [
-      {
-        "title": "Deputy Returning Officer (DRO)",
-        "category": "DRO",
-        "pay_status": "ESTIMATED_BENCHMARK",
-        "pay_is_estimated": true,
-        "pay_actual_raw": null,
-        "pay_actual_amount": null,
-        "pay_estimated_amount": 275.0,
-        "pay_source_notes": "Modeled benchmark (~$275/day) based on municipal staffing policy",
-        "pay_type": "DAY_RATE",
-        "training_pay": null,
-        "hours_or_shift": "8:30 AM - 9:00 PM on October 26, 2026",
-        "min_age": 18,
-        "description": null
-      },
-      {
-        "title": "Voting Location Supervisor (VLS)",
-        "category": "SUPERVISOR",
-        "pay_status": "ESTIMATED_BENCHMARK",
-        "pay_is_estimated": true,
-        "pay_actual_raw": null,
-        "pay_actual_amount": null,
-        "pay_estimated_amount": 350.0,
-        "pay_source_notes": "Modeled benchmark (~$350/day) based on municipal staffing policy",
-        "pay_type": "DAY_RATE",
-        "training_pay": null,
-        "hours_or_shift": "8:30 AM - 9:00 PM on October 26, 2026",
-        "min_age": 18,
-        "description": null
-      },
-      {
-        "title": "Information Assistant / Greeter",
-        "category": "GREETER",
-        "pay_status": "ESTIMATED_BENCHMARK",
-        "pay_is_estimated": true,
-        "pay_actual_raw": null,
-        "pay_actual_amount": null,
-        "pay_estimated_amount": 225.0,
-        "pay_source_notes": "Modeled benchmark (~$225/day) based on municipal staffing policy",
-        "pay_type": "DAY_RATE",
-        "training_pay": null,
-        "hours_or_shift": "8:30 AM - 9:00 PM on October 26, 2026",
-        "min_age": 16,
-        "description": null
-      }
-    ],
-    "scraped_at": "2026-08-21T02:37:28.237548"
+    "scraped_at": "2026-08-21T19:24:51.266985"
   },
   "City of Hamilton": {
     "municipality": "City of Hamilton",
@@ -595,7 +527,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:23.269857"
+    "scraped_at": "2026-08-21T19:24:48.327291"
   },
   "City of Kingston": {
     "municipality": "City of Kingston",
@@ -660,7 +592,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:23.708287"
+    "scraped_at": "2026-08-21T19:24:48.880903"
   },
   "City of London": {
     "municipality": "City of London",
@@ -728,7 +660,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:24.726607"
+    "scraped_at": "2026-08-21T19:24:49.869388"
   },
   "City of Mississauga": {
     "municipality": "City of Mississauga",
@@ -796,7 +728,7 @@
         "description": "Official 2026 election official position for City of Mississauga."
       }
     ],
-    "scraped_at": "2026-08-21T02:37:25.572054"
+    "scraped_at": "2026-08-21T19:24:53.966999"
   },
   "City of Niagara Falls": {
     "municipality": "City of Niagara Falls",
@@ -863,7 +795,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:28.601655"
+    "scraped_at": "2026-08-21T19:24:46.663650"
   },
   "City of Oshawa": {
     "municipality": "City of Oshawa",
@@ -928,7 +860,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:26.051839"
+    "scraped_at": "2026-08-21T19:24:52.155639"
   },
   "City of Pickering": {
     "municipality": "City of Pickering",
@@ -993,7 +925,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:27.484847"
+    "scraped_at": "2026-08-21T19:24:53.293257"
   },
   "City of Sarnia": {
     "municipality": "City of Sarnia",
@@ -1061,7 +993,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:23.287572"
+    "scraped_at": "2026-08-21T19:24:48.340818"
   },
   "City of Sault Ste. Marie": {
     "municipality": "City of Sault Ste. Marie",
@@ -1098,7 +1030,7 @@
         "description": "Posted: July 23, 2026 The City of Sault Ste. Marie is accepting applications to work during the 2026 Municipal Election. Individuals are needed on: Advance Vote Day 1 on Wednesday, October 7, 2026 Advance Vote Day 2 on Saturday, October 10, 2026 Advance Vote Day 3 on Wednesday, October 14, 2026 Adva..."
       }
     ],
-    "scraped_at": "2026-08-21T02:37:23.669333"
+    "scraped_at": "2026-08-21T19:24:51.737589"
   },
   "City of St. Catharines": {
     "municipality": "City of St. Catharines",
@@ -1163,7 +1095,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:22.599476"
+    "scraped_at": "2026-08-21T19:24:47.910202"
   },
   "City of Thunder Bay": {
     "municipality": "City of Thunder Bay",
@@ -1231,7 +1163,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:25.028396"
+    "scraped_at": "2026-08-21T19:24:51.130160"
   },
   "City of Toronto": {
     "municipality": "City of Toronto",
@@ -1299,7 +1231,7 @@
         "description": "Official 2026 election official position for City of Toronto."
       }
     ],
-    "scraped_at": "2026-08-21T02:37:25.269541"
+    "scraped_at": "2026-08-21T19:24:52.625406"
   },
   "City of Vaughan": {
     "municipality": "City of Vaughan",
@@ -1366,7 +1298,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:26.523758"
+    "scraped_at": "2026-08-21T19:24:52.103343"
   },
   "City of Waterloo": {
     "municipality": "City of Waterloo",
@@ -1434,7 +1366,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:24.074319"
+    "scraped_at": "2026-08-21T19:24:50.314039"
   },
   "City of Windsor": {
     "municipality": "City of Windsor",
@@ -1502,7 +1434,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:28.973536"
+    "scraped_at": "2026-08-21T19:24:46.232956"
   },
   "Town of Ajax": {
     "municipality": "Town of Ajax",
@@ -1570,7 +1502,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:29.145057"
+    "scraped_at": "2026-08-21T19:24:55.095322"
   },
   "Town of Caledon": {
     "municipality": "Town of Caledon",
@@ -1637,7 +1569,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:22.237138"
+    "scraped_at": "2026-08-21T19:24:47.336739"
   },
   "Town of Innisfil": {
     "municipality": "Town of Innisfil",
@@ -1702,7 +1634,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:28.087807"
+    "scraped_at": "2026-08-21T19:24:53.822314"
   },
   "Town of Oakville": {
     "municipality": "Town of Oakville",
@@ -1715,7 +1647,7 @@
     "election_portal_url": "https://www.oakville.ca/town-hall/elections/",
     "apply_url": "https://www.oakville.ca/town-hall/elections/",
     "contact_email": "elections@oakville.ca",
-    "contact_phone": "905-815-6015",
+    "contact_phone": null,
     "requirements": [
       "Must remain politically neutral and not active on candidate campaigns"
     ],
@@ -1767,7 +1699,7 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:22.113542"
+    "scraped_at": "2026-08-21T19:24:47.382559"
   },
   "Town of Whitby": {
     "municipality": "Town of Whitby",
@@ -1835,6 +1767,6 @@
         "description": null
       }
     ],
-    "scraped_at": "2026-08-21T02:37:29.274002"
+    "scraped_at": "2026-08-21T19:24:46.840735"
   }
 }

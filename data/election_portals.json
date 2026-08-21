@@ -58,8 +58,8 @@
     "region": "York",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://elections.markham.ca/",
-    "apply_url": "https://elections.markham.ca/",
+    "election_url": "https://www.markham.ca/elections",
+    "apply_url": "https://www.markham.ca/elections",
     "contact_email": "vote@markham.ca"
   },
   {
@@ -76,8 +76,8 @@
     "region": "Waterloo",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.kitchener.ca/en/council-and-city-admin/elections.aspx",
-    "apply_url": "https://www.kitchener.ca/en/council-and-city-admin/elections.aspx",
+    "election_url": "https://www.kitchener.ca/election",
+    "apply_url": "https://www.kitchener.ca/election",
     "contact_email": "election@kitchener.ca"
   },
   {
@@ -112,8 +112,8 @@
     "region": "York",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.richmondhill.ca/en/our-government/work-the-election.aspx",
-    "apply_url": "https://www.richmondhill.ca/en/our-government/work-the-election.aspx",
+    "election_url": "https://www.richmondhill.ca/rhvotes",
+    "apply_url": "https://www.richmondhill.ca/rhvotes",
     "contact_email": "candidates@richmondhill.ca"
   },
   {
@@ -148,8 +148,8 @@
     "region": "Wellington",
     "tier": "Single-tier",
     "type": "html_portal",
-    "election_url": "https://guelph.ca/city-hall/mayor-and-council/municipal-elections/",
-    "apply_url": "https://guelph.ca/city-hall/mayor-and-council/municipal-elections/",
+    "election_url": "https://guelph.ca/city-hall/municipal-elections/",
+    "apply_url": "https://guelph.ca/city-hall/municipal-elections/",
     "contact_email": "elections@guelph.ca"
   },
   {
@@ -229,8 +229,8 @@
     "region": "Peterborough",
     "tier": "Single-tier",
     "type": "html_portal",
-    "election_url": "https://www.peterborough.ca/en/city-hall/election-employment.aspx",
-    "apply_url": "https://www.peterborough.ca/en/city-hall/election-employment.aspx",
+    "election_url": "https://www.peterborough.ca",
+    "apply_url": "https://www.peterborough.ca",
     "contact_email": "elections@peterborough.ca"
   },
   {
@@ -247,8 +247,8 @@
     "region": "York",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.newmarket.ca/elections/Pages/Work-at-an-Election.aspx",
-    "apply_url": "https://www.newmarket.ca/elections/Pages/Work-at-an-Election.aspx",
+    "election_url": "https://newmarketvotes.ca/",
+    "apply_url": "https://newmarketvotes.ca/",
     "contact_email": "elections@newmarket.ca"
   },
   {
@@ -256,8 +256,8 @@
     "region": "Hastings",
     "tier": "Single-tier",
     "type": "html_portal",
-    "election_url": "https://www.belleville.ca/en/city-hall/elections-employment.aspx",
-    "apply_url": "https://www.belleville.ca/en/city-hall/elections-employment.aspx",
+    "election_url": "https://www.belleville.ca/en/city-hall/municipal-election.aspx",
+    "apply_url": "https://www.belleville.ca/en/city-hall/municipal-election.aspx",
     "contact_email": "elections@belleville.ca"
   },
   {
@@ -265,8 +265,8 @@
     "region": "Halton",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.milton.ca/en/town-hall/election-employment.aspx",
-    "apply_url": "https://www.milton.ca/en/town-hall/election-employment.aspx",
+    "election_url": "https://www.milton.ca/en/town-hall/elections.aspx",
+    "apply_url": "https://www.milton.ca/en/town-hall/elections.aspx",
     "contact_email": "elections@milton.ca"
   },
   {
@@ -274,8 +274,8 @@
     "region": "Halton",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.haltonhills.ca/en/your-government/work-the-election.aspx",
-    "apply_url": "https://www.haltonhills.ca/en/your-government/work-the-election.aspx",
+    "election_url": "https://www.haltonhills.ca/election",
+    "apply_url": "https://www.haltonhills.ca/election",
     "contact_email": "elections@haltonhills.ca"
   },
   {
@@ -292,8 +292,8 @@
     "region": "York",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.aurora.ca/en/your-government/work-at-an-election.aspx",
-    "apply_url": "https://www.aurora.ca/en/your-government/work-at-an-election.aspx",
+    "election_url": "https://www.aurora.ca/your-government/elections-2026/",
+    "apply_url": "https://www.aurora.ca/your-government/elections-2026/",
     "contact_email": "elections@aurora.ca"
   },
   {
@@ -319,8 +319,8 @@
     "region": "Nipissing",
     "tier": "Single-tier",
     "type": "html_portal",
-    "election_url": "https://www.northbay.ca/city-government/elections/work-the-election/",
-    "apply_url": "https://www.northbay.ca/city-government/elections/work-the-election/",
+    "election_url": "https://northbay.ca/city-government/municipal-elections/",
+    "apply_url": "https://northbay.ca/city-government/municipal-elections/",
     "contact_email": "elections@northbay.ca"
   },
   {
@@ -337,8 +337,8 @@
     "region": "Chatham-Kent",
     "tier": "Single-tier",
     "type": "html_portal",
-    "election_url": "https://www.chatham-kent.ca/localgovernment/elections/Pages/Work-the-Election.aspx",
-    "apply_url": "https://www.chatham-kent.ca/localgovernment/elections/Pages/Work-the-Election.aspx",
+    "election_url": "https://www.chatham-kent.ca/localgovernment/elections/Pages/2026-Municipal-Election.aspx",
+    "apply_url": "https://www.chatham-kent.ca/localgovernment/elections/Pages/2026-Municipal-Election.aspx",
     "contact_email": "ck_elections@chatham-kent.ca"
   },
   {
@@ -355,8 +355,8 @@
     "region": "Simcoe",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.collingwood.ca/council-government/elections/work-the-election",
-    "apply_url": "https://www.collingwood.ca/council-government/elections/work-the-election",
+    "election_url": "https://www.collingwood.ca/governance-engagement/elections",
+    "apply_url": "https://www.collingwood.ca/governance-engagement/elections",
     "contact_email": "clerk@collingwood.ca"
   },
   {

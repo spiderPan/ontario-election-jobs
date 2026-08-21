@@ -52,3 +52,12 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Scraped & Generated Data (Built dynamically in GitHub Actions / local crawler)
+data/*.db
+data/election_jobs_by_municipality.json
+data/election_jobs.csv
+data/election_jobs_report.md
+
+# Keep seed portal configurations
+!data/election_portals.json

@@ -81,24 +81,22 @@ Exported files will be generated in `data/`:
 
 This repository includes a pre-configured GitHub Actions workflow in [`.github/workflows/nightly-crawl.yml`](.github/workflows/nightly-crawl.yml) that:
 1. **Runs every night at 04:00 UTC** (Midnight EDT / 11:00 PM EST) via cron schedule.
-2. **Cuts a fresh crawl** across all Ontario municipal portals and regenerates JSON, CSV, and Markdown datasets.
-3. **Commits and pushes** updated data back to the repository automatically.
-4. **Deploys the static web app** (`index.html`, `analytics.html`, and `data/`) directly to **GitHub Pages**.
+2. **Cuts a fresh crawl** across all Ontario municipal portals and regenerates JSON, CSV, Markdown, and SQLite datasets.
+3. **Deploys the static web app** (`index.html`, `analytics.html`, and fresh `data/`) directly to **GitHub Pages** without polluting the Git commit history.
 
 ### Setting up GitHub Pages
 
-1. Create a repository on GitHub (e.g. `ontario-election-jobs-crawler`).
+1. In your GitHub repository [spiderPan/ontario-election-jobs](https://github.com/spiderPan/ontario-election-jobs):
+   - Go to **Settings** > **Pages**.
+   - Under **Build and deployment** > **Source**, select **GitHub Actions**.
 2. Push this codebase:
    ```bash
-   git remote add origin git@github.com:<YOUR_USERNAME>/ontario-election-jobs-crawler.git
+   git remote add origin git@github.com:spiderPan/ontario-election-jobs.git
    git branch -M main
    git push -u origin main
    ```
-3. In your GitHub repository:
-   - Go to **Settings** > **Pages**.
-   - Under **Build and deployment** > **Source**, select **GitHub Actions**.
-   - Go to **Settings** > **Actions** > **General** > **Workflow permissions**, and select **Read and write permissions** (to allow data updates to be committed).
-4. The workflow will automatically run and publish your site at `https://<YOUR_USERNAME>.github.io/ontario-election-jobs-crawler/`.
+3. The workflow will automatically run, crawl the latest data, and publish your site at:
+   **`https://spiderPan.github.io/ontario-election-jobs/`**
 
 ---
 

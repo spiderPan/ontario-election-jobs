@@ -22,7 +22,7 @@ def export_all(db: ElectionJobDatabase):
     csv_path = "data/election_jobs.csv"
     if flat_roles:
         fieldnames = [
-            "municipality", "region", "municipal_status", "election_year",
+            "municipality", "region", "municipal_status", "has_direct_apply", "election_year",
             "role_title", "role_category", "pay_status",
             "pay_actual_published", "pay_actual_amount", "pay_source_notes",
             "pay_type", "training_pay", "hours_or_shift", "min_age",
@@ -50,10 +50,14 @@ def export_all(db: ElectionJobDatabase):
         f.write("## Verified 2026 Municipal Opportunities (Grouped by Municipality)\n\n")
 
         for muni, info in grouped.items():
+            has_apply = info.get("has_direct_apply", False)
             f.write(f"### {muni} ({info.get('region', 'Ontario')})\n\n")
             f.write(f"- **Status:** `{info['status']}`\n")
             f.write(f"- **Election Portal:** [{info['election_portal_url']}]({info['election_portal_url']})\n")
-            f.write(f"- **Apply Directly:** [{info['apply_url']}]({info['apply_url']})\n")
+            if has_apply:
+                f.write(f"- **Direct Application Form:** [{info['apply_url']}]({info['apply_url']})\n")
+            else:
+                f.write(f"- **Application Form:** *Not yet active on portal (Recruitment TBD / Portal Information only)*\n")
             if info.get("contact_email"):
                 f.write(f"- **Contact:** `{info['contact_email']}`\n")
             f.write("\n**Available Poll Positions (2026):**\n\n")

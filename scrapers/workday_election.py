@@ -83,6 +83,7 @@ class WorkdayElectionScraper(BaseScraper):
                 municipal_tier=self.tier,
                 election_portal_url=self.portal_url,
                 apply_url=apply_url,
+                has_direct_apply=True,
                 status="Accepting Applications",
                 election_date="October 26, 2026",
                 roles=roles,

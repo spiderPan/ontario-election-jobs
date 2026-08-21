@@ -85,17 +85,28 @@ class HtmlPortalScraper(BaseScraper):
                 # Parse or model benchmark estimate
                 roles = extract_roles_from_content(text)
 
-            # Detect Apply Link
+            # Detect Apply Link and whether a direct application form is live
             apply_link = str(res.url)
+            has_direct_apply = False
+
             for a_tag in main_content.find_all("a", href=True):
                 href = a_tag["href"]
                 link_text = a_tag.get_text(strip=True).lower()
-                if any(kw in link_text for kw in ["apply now", "application form", "submit application", "work at the election", "apply online"]):
+                if any(kw in link_text for kw in ["apply now", "application form", "submit application", "work at the election", "work with us", "apply online", "online application"]):
                     apply_link = urljoin(self.election_url, href)
+                    has_direct_apply = True
                     break
-                elif any(domain in href for domain in ["forms.office.com", "docs.google.com/forms", "formstack", "surveymonkey", "workday", "dayforce"]):
+                elif any(domain in href.lower() for domain in ["forms.office.com", "docs.google.com/forms", "formstack.com", "surveymonkey.com", "myworkdayjobs.com", "dayforcehcm.com"]):
                     apply_link = href
+                    has_direct_apply = True
                     break
+
+            if not has_direct_apply and self.apply_url and self.apply_url != self.election_url:
+                apply_link = self.apply_url
+                has_direct_apply = True
+
+            if not has_direct_apply and status == "Accepting Applications":
+                status = "Information Portal"
 
             reqs = extract_requirements(text)
             if not reqs:
@@ -124,6 +135,7 @@ class HtmlPortalScraper(BaseScraper):
                 municipal_tier=self.tier,
                 election_portal_url=str(res.url),
                 apply_url=apply_link,
+                has_direct_apply=has_direct_apply,
                 status=status,
                 election_date="October 26, 2026",
                 advance_voting_dates="October 2026",

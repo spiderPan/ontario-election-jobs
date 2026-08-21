@@ -27,6 +27,7 @@ class ElectionJobDatabase:
                     municipal_tier TEXT,
                     election_portal_url TEXT NOT NULL,
                     apply_url TEXT NOT NULL,
+                    has_direct_apply INTEGER DEFAULT 0,
                     status TEXT NOT NULL,
                     election_date TEXT DEFAULT 'October 26, 2026',
                     advance_voting_dates TEXT,
@@ -77,15 +78,16 @@ class ElectionJobDatabase:
             conn.execute("""
                 INSERT INTO municipal_postings (
                     id, municipality, region_or_county, municipal_tier,
-                    election_portal_url, apply_url, status, election_date,
+                    election_portal_url, apply_url, has_direct_apply, status, election_date,
                     advance_voting_dates, is_verified_2026, requirements_json,
                     contact_email, contact_phone, raw_text_snippet, scraped_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
                     municipality=excluded.municipality,
                     region_or_county=excluded.region_or_county,
                     election_portal_url=excluded.election_portal_url,
                     apply_url=excluded.apply_url,
+                    has_direct_apply=excluded.has_direct_apply,
                     status=excluded.status,
                     is_verified_2026=excluded.is_verified_2026,
                     requirements_json=excluded.requirements_json,
@@ -96,6 +98,7 @@ class ElectionJobDatabase:
             """, (
                 posting.id, posting.municipality, posting.region_or_county,
                 posting.municipal_tier, posting.election_portal_url, posting.apply_url,
+                1 if posting.has_direct_apply else 0,
                 posting.status, posting.election_date, posting.advance_voting_dates,
                 1 if posting.is_verified_2026 else 0, reqs_str, posting.contact_email,
                 posting.contact_phone, posting.raw_text_snippet, posting.scraped_at.isoformat()
@@ -160,6 +163,7 @@ class ElectionJobDatabase:
                     "region": p["region_or_county"],
                     "tier": p["municipal_tier"],
                     "status": p["status"],
+                    "has_direct_apply": bool(p["has_direct_apply"]),
                     "election_date": p["election_date"],
                     "election_year": "2026",
                     "is_verified_2026": True,
@@ -182,6 +186,7 @@ class ElectionJobDatabase:
                     m.municipality,
                     m.region_or_county as region,
                     m.status as municipal_status,
+                    CASE WHEN m.has_direct_apply = 1 THEN 'TRUE' ELSE 'FALSE' END as has_direct_apply,
                     '2026' as election_year,
                     r.title as role_title,
                     r.role_category,
@@ -217,6 +222,11 @@ class ElectionJobDatabase:
                 WHERE m.is_verified_2026 = 1 AND r.pay_status = 'ACTUAL_PUBLISHED' AND r.pay_actual_raw IS NOT NULL
             """).fetchone()[0]
 
+            direct_apply_munis = conn.execute("""
+                SELECT COUNT(*) FROM municipal_postings 
+                WHERE is_verified_2026 = 1 AND has_direct_apply = 1
+            """).fetchone()[0]
+
             not_available_count = total_roles - published_count
 
             return {
@@ -224,5 +234,6 @@ class ElectionJobDatabase:
                 "total_roles": total_roles,
                 "roles_with_published_pay": published_count,
                 "roles_not_available": not_available_count,
+                "municipalities_with_direct_apply": direct_apply_munis,
                 "election_year": "2026"
             }

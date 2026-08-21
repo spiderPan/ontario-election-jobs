@@ -30,7 +30,7 @@
     "municipality": "City of Ottawa",
     "region": "Ottawa",
     "tier": "Single-tier",
-    "type": "workday_or_html",
+    "type": "html_portal",
     "election_url": "https://ottawa.ca/en/city-hall/elections",
     "apply_url": "https://ottawa.ca/en/city-hall/elections",
     "contact_email": "elections@ottawa.ca"

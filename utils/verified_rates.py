@@ -127,5 +127,54 @@ CONFIRMED_ACTUAL_RATES = {
                 "notes": "Confirmed on official Toronto Elections portal"
             }
         ]
+    },
+    "City of London": {
+        "source": "Official City of London 2026 Election Staff Schedule",
+        "roles": [
+            {
+                "title": "Deputy Returning Officer (DRO)",
+                "category": "DRO",
+                "pay_actual_raw": "$350.00 (covers training & Election Day)",
+                "pay_actual_amount": 350.0,
+                "pay_type": "DAY_RATE",
+                "training_pay": "Included in day fee",
+                "hours_or_shift": "Voting Day (9:00 AM - until close)",
+                "min_age": 18,
+                "notes": "Confirmed on official City of London 2026 portal"
+            },
+            {
+                "title": "Tabulator Operator",
+                "category": "TECH",
+                "pay_actual_raw": "$300.00 (covers training & Election Day)",
+                "pay_actual_amount": 300.0,
+                "pay_type": "DAY_RATE",
+                "training_pay": "Included in day fee",
+                "hours_or_shift": "Voting Day (9:00 AM - until close)",
+                "min_age": 18,
+                "notes": "Confirmed on official City of London 2026 portal"
+            },
+            {
+                "title": "Registration Officer",
+                "category": "REVISION",
+                "pay_actual_raw": "$250.00 (covers training & Election Day)",
+                "pay_actual_amount": 250.0,
+                "pay_type": "DAY_RATE",
+                "training_pay": "Included in day fee",
+                "hours_or_shift": "Voting Day (9:00 AM - until close)",
+                "min_age": 18,
+                "notes": "Confirmed on official City of London 2026 portal"
+            },
+            {
+                "title": "Information Officer",
+                "category": "GREETER",
+                "pay_actual_raw": "$220.00 (covers training & Election Day)",
+                "pay_actual_amount": 220.0,
+                "pay_type": "DAY_RATE",
+                "training_pay": "Included in day fee",
+                "hours_or_shift": "Voting Day (9:00 AM - until close)",
+                "min_age": 18,
+                "notes": "Confirmed on official City of London 2026 portal"
+            }
+        ]
     }
 }

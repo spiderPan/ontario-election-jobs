@@ -13,7 +13,7 @@ ROLE_DEFINITIONS = [
         "patterns": [
             r"Voting Location Supervisor", r"Voting Place Supervisor",
             r"Supervisory Returning Officer", r"\bSRO\b", r"\bVLS\b",
-            r"Poll Supervisor", r"Area Supervisor", r"Site Supervisor"
+            r"^Poll Supervisor", r"Area Supervisor", r"Site Supervisor"
         ],
         "default_min_age": 18,
         "description": "Supervises overall voting place operations and election personnel. Resolves voter inquiries, oversees optical scan tabulators/ballot security, coordinates poll opening and closing, and liaises directly with the Municipal Clerk."
@@ -28,20 +28,28 @@ ROLE_DEFINITIONS = [
         "description": "Administers statutory declarations and oaths, issues official ballots to qualified electors, maintains ballot box custody, operates tabulators, protects elector secrecy, and reconciles ballot accounting tallies at poll close."
     },
     {
-        "category": "CLERK",
-        "title": "Poll Clerk / Ballot Clerk / Tabulator Operator",
+        "category": "TECH",
+        "title": "Tabulator Operator",
         "patterns": [
-            r"Tabulator Operator", r"Tabulator Clerk", r"Ballot Clerk",
-            r"Poll Clerk", r"Voting Clerk", r"Election Clerk"
+            r"Tabulator Operator", r"Tabulator Clerk", r"Tabulator DRO", r"Technical Support"
+        ],
+        "default_min_age": 18,
+        "description": "Sets up, tests, and operates electronic ballot tabulators at voting places. Troubleshoots ballot feed issues and assists voters in inserting ballots securely into tabulators."
+    },
+    {
+        "category": "CLERK",
+        "title": "Poll Clerk / Ballot Clerk",
+        "patterns": [
+            r"Ballot Clerk", r"Poll Clerk", r"Voting Clerk", r"Election Clerk"
         ],
         "default_min_age": 18,
         "description": "Greets electors, checks names against the official Voters' List, verifies acceptable voter identification under the Municipal Elections Act, maintains the poll record, and guides voters to tabulators."
     },
     {
         "category": "GREETER",
-        "title": "Information Assistant / Greeter / Line Monitor",
+        "title": "Information Officer / Greeter / Line Monitor",
         "patterns": [
-            r"Information Assistant", r"Greeter", r"Line Monitor",
+            r"Information Assistant", r"Information Officer", r"Greeter", r"Line Monitor",
             r"Line Management", r"Customer Service Assistant", r"Entrance Greeter"
         ],
         "default_min_age": 16,
@@ -49,9 +57,9 @@ ROLE_DEFINITIONS = [
     },
     {
         "category": "REVISION",
-        "title": "Revision Officer / Voter Registration Clerk",
+        "title": "Registration Officer / Revision Officer",
         "patterns": [
-            r"Revision Officer", r"Voter Registration Official",
+            r"Revision Officer", r"Registration Officer", r"Voter Registration Official",
             r"Registration Clerk", r"Revisions Clerk", r"Voters List Clerk"
         ],
         "default_min_age": 18,
@@ -70,11 +78,11 @@ ROLE_DEFINITIONS = [
 ]
 
 DAY_RATE_PATTERN = re.compile(
-    r'\$\s*([0-9]{2,4}(?:\.[0-9]{2})?)\s*(?:/(?:day|shift|flat|honorarium)|per\s*(?:day|shift|voting\s*day)|honorarium|flat\s*rate|for\s*the\s*day)',
+    r'(?:[-–—:]\s*)?\$\s*([0-9]{2,4}(?:\.[0-9]{2})?)\s*(?:/(?:day|shift|flat|honorarium)|per\s*(?:day|shift|voting\s*day)|honorarium|flat\s*rate|lump\s*sum|for\s*(?:mandatory\s*)?training\s*and\s*(?:election|voting)\s*day|for\s*(?:election|voting)\s*day|for\s*the\s*day|\(covers\s*[^)]+\))',
     re.IGNORECASE
 )
 HOURLY_PATTERN = re.compile(
-    r'\$\s*([0-9]{2}(?:\.[0-9]{2})?)\s*(?:/(?:hr|hour)|per\s*hour|hourly|\s*an\s*hour)',
+    r'(?:[-–—:]\s*)?\$\s*([0-9]{2}(?:\.[0-9]{2})?)\s*(?:/(?:hr|hour)|per\s*hour|hourly|\s*an\s*hour)',
     re.IGNORECASE
 )
 TRAINING_PATTERN = re.compile(
@@ -118,18 +126,35 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
     found_roles: List[ElectionRole] = []
     seen_categories = set()
 
-    blocks = [b.strip() for b in re.split(r'\n{2,}|\r\n\r\n', text) if len(b.strip()) > 20]
+    # Smart chunking by headings or role patterns as well as blank lines
+    role_all_patterns = [p for rd in ROLE_DEFINITIONS for p in rd["patterns"]]
+    lines = [l.strip() for l in text.split('\n') if l.strip()]
+    
+    blocks = []
+    current_block = []
+    for line in lines:
+        is_role_heading = any(re.search(rf'^(?:###?\s*|[-•*]\s*)?{p}', line, re.IGNORECASE) for p in role_all_patterns)
+        if is_role_heading and current_block:
+            blocks.append('\n'.join(current_block))
+            current_block = [line]
+        else:
+            current_block.append(line)
+    if current_block:
+        blocks.append('\n'.join(current_block))
+
+    # Also include standard double-newline blocks if long text was provided
+    if len(blocks) <= 1:
+        blocks = [b.strip() for b in re.split(r'\n{2,}|\r\n\r\n', text) if len(b.strip()) > 20]
+
+    roles_by_cat: Dict[str, ElectionRole] = {}
 
     for block in blocks:
         for role_def in ROLE_DEFINITIONS:
             cat = role_def["category"]
-            if cat in seen_categories:
-                continue
 
-            matched = any(re.search(pat, block, re.IGNORECASE) for pat in role_def["patterns"])
+            first_line = block.split('\n')[0] if '\n' in block else block
+            matched = any(re.search(pat, first_line, re.IGNORECASE) or (len(block) < 600 and re.search(pat, block, re.IGNORECASE)) for pat in role_def["patterns"])
             if matched:
-                seen_categories.add(cat)
-                
                 day_match = DAY_RATE_PATTERN.search(block)
                 hourly_match = HOURLY_PATTERN.search(block)
                 training_match = TRAINING_PATTERN.search(block)
@@ -166,7 +191,7 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
 
                 desc = role_def.get("description")
 
-                found_roles.append(ElectionRole(
+                role_obj = ElectionRole(
                     title=role_def["title"],
                     role_category=cat,
                     pay_status=pay_status,
@@ -178,7 +203,14 @@ def extract_roles_from_content(text: str) -> List[ElectionRole]:
                     hours_or_shift=shift_hours,
                     description=desc,
                     min_age=min_age
-                ))
+                )
+
+                if cat not in roles_by_cat:
+                    roles_by_cat[cat] = role_obj
+                elif roles_by_cat[cat].pay_status == "NOT_AVAILABLE" and role_obj.pay_status == "ACTUAL_PUBLISHED":
+                    roles_by_cat[cat] = role_obj
+
+    found_roles = list(roles_by_cat.values())
 
     # Baseline fallback if specific roles weren't split in page text
     if not found_roles:

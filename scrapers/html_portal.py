@@ -56,7 +56,7 @@ class HtmlPortalScraper(BaseScraper):
             ))
 
         posting_id = hashlib.md5(f"{self.municipality}_2026".encode()).hexdigest()
-        has_direct_apply = bool(self.apply_url and self.apply_url != self.election_url)
+        has_direct_apply = bool(self.apply_url)
 
         return MunicipalElectionPostings(
             id=posting_id,
@@ -77,7 +77,7 @@ class HtmlPortalScraper(BaseScraper):
                 "Available for training session and Voting Day on October 26, 2026"
             ],
             roles=roles,
-            contact_email=self.known_email or "elections@ottawa.ca",
+            contact_email=self.known_email or f"elections@{self.municipality.lower().replace('city of ', '').replace('town of ', '').replace(' ', '')}.ca",
             contact_phone=None,
             raw_text_snippet=f"Official 2026 Municipal Elections Portal and verified Staff Compensation Schedule for {self.municipality}."
         )
@@ -106,6 +106,40 @@ class HtmlPortalScraper(BaseScraper):
 
             text = main_content.get_text("\n", strip=True)
 
+            # Subpage discovery: check if this is a general landing page that links to a dedicated job page
+            subpage_candidates = []
+            for a_tag in soup.find_all("a", href=True):
+                href = a_tag["href"]
+                link_text = a_tag.get_text(strip=True).lower()
+                href_lower = href.lower()
+                if any(kw in link_text for kw in ["work the election", "work at the election", "work during the election", "election jobs", "election employment", "become an election worker", "work the municipal election"]) or \
+                   any(kw in href_lower for kw in ["/work-the-election", "/working-election", "/work-election", "/election-jobs", "/election-employment", "/election-workers"]):
+                    full_sub_url = urljoin(str(res.url), href)
+                    if full_sub_url != str(res.url) and full_sub_url not in subpage_candidates:
+                        subpage_candidates.append(full_sub_url)
+
+            # If subpages found, crawl the most promising subpage to enrich content
+            if subpage_candidates:
+                for sub_url in subpage_candidates[:2]:
+                    sub_res = await self.safe_get(client, sub_url)
+                    if sub_res and sub_res.status_code == 200:
+                        sub_soup = BeautifulSoup(sub_res.text, "html.parser")
+                        for tag in sub_soup(["script", "style", "noscript", "svg", "header", "footer", "nav"]):
+                            tag.decompose()
+                        sub_main = (
+                            sub_soup.find("main") or
+                            sub_soup.find("div", id=re.compile(r'content|main|article', re.I)) or
+                            sub_soup.find("div", class_=re.compile(r'content|main|body|page-content', re.I)) or
+                            sub_soup
+                        )
+                        sub_text = sub_main.get_text("\n", strip=True)
+                        sub_valid, _, _ = validate_2026_freshness(sub_text, str(sub_res.url))
+                        if sub_valid or "2026" in sub_text or "election" in sub_text.lower():
+                            text = text + "\n\n" + sub_text
+                            main_content = sub_main
+                            res = sub_res
+                            break
+
             # Strict 2026 Freshness check
             is_valid_2026, reason, yr = validate_2026_freshness(text, str(res.url))
             if not is_valid_2026:
@@ -133,7 +167,7 @@ class HtmlPortalScraper(BaseScraper):
                     apply_link = urljoin(self.election_url, href)
                     has_direct_apply = True
                     break
-                elif any(domain in href.lower() for domain in ["forms.office.com", "docs.google.com/forms", "formstack.com", "surveymonkey.com", "myworkdayjobs.com", "dayforcehcm.com"]):
+                elif any(domain in href.lower() for domain in ["forms.office.com", "docs.google.com/forms", "formstack.com", "surveymonkey.com", "myworkdayjobs.com", "dayforcehcm.com", "voterview.ca"]):
                     apply_link = href
                     has_direct_apply = True
                     break

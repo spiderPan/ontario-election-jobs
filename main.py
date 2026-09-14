@@ -96,6 +96,17 @@ async def run_crawler(target_filter: str = None, concurrency: int = 5):
                 finally:
                     progress.advance(task)
 
+            # Centralized AMO municipal job board check
+            if not target_filter or "amo" in target_filter.lower():
+                try:
+                    amo_scraper = AMOMunicipalElectionScraper()
+                    amo_postings = await amo_scraper.scrape(client)
+                    for p in amo_postings:
+                        DB.save_posting(p)
+                        results.append(p)
+                except Exception:
+                    pass
+
     console.print(f"\n[bold green]✓ Verified & Saved {len(results)} Municipalities for 2026 Election![/bold green]")
     if excluded_count > 0:
         console.print(f"[dim yellow]ℹ Excluded {excluded_count} out-of-date / archived portals from previous cycles.[/dim yellow]")

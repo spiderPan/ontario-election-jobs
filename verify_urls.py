@@ -9,18 +9,18 @@ import httpx
 
 KNOWN_WORKING_URLS = {
     "City of London": {
-        "election_url": "https://www.london.ca/government/elections",
-        "apply_url": "https://www.london.ca/government/elections",
+        "election_url": "https://london.ca/work-the-election",
+        "apply_url": "https://workerapplication.voterview.ca/3936/14",
         "contact_email": "elections@london.ca"
     },
     "City of Toronto": {
-        "election_url": "https://www.toronto.ca/city-government/elections/work-at-an-election/",
-        "apply_url": "https://www.toronto.ca/city-government/elections/work-at-an-election/",
+        "election_url": "https://www.toronto.ca/city-government/elections/about-election-jobs/",
+        "apply_url": "https://www.toronto.ca/city-government/elections/about-election-jobs/",
         "contact_email": "elections@toronto.ca"
     },
     "City of Mississauga": {
-        "election_url": "https://mississaugavotes.ca/",
-        "apply_url": "https://mississaugavotes.ca/work-with-us/",
+        "election_url": "https://mississaugavotes.ca/2026-municipal-election/for-election-workers/become-an-election-worker/",
+        "apply_url": "https://mississaugavotes.ca/2026-municipal-election/for-election-workers/become-an-election-worker/",
         "contact_email": "mississauga.votes@mississauga.ca"
     },
     "City of Ottawa": {
@@ -29,13 +29,13 @@ KNOWN_WORKING_URLS = {
         "contact_email": "elections@ottawa.ca"
     },
     "City of Hamilton": {
-        "election_url": "https://www.hamilton.ca/city-council/elections",
-        "apply_url": "https://www.hamilton.ca/city-council/elections",
+        "election_url": "https://www.hamilton.ca/elections",
+        "apply_url": "https://www.hamilton.ca/elections",
         "contact_email": "elections@hamilton.ca"
     },
     "City of Brampton": {
-        "election_url": "https://www.brampton.ca/EN/City-Hall/Election/Pages/welcome.aspx",
-        "apply_url": "https://www.brampton.ca/EN/City-Hall/Election/Pages/welcome.aspx",
+        "election_url": "https://www.brampton.ca/EN/City-Hall/Election/Workers/Pages/Available-Positions.aspx",
+        "apply_url": "https://forms.office.com/r/7JHen2LfUD",
         "contact_email": "election.office@brampton.ca"
     },
     "City of Markham": {

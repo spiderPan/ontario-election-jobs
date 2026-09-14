@@ -12,34 +12,35 @@ from utils.election_parser import extract_roles_from_content, parse_status_from_
 
 
 class AMOMunicipalElectionScraper(BaseScraper):
-    BASE_URL = "https://www.amo.on.ca/careers"
+    BASE_URL = "https://jobs.amo.on.ca/"
 
     async def scrape(self, client: httpx.AsyncClient) -> List[MunicipalElectionPostings]:
         postings: List[MunicipalElectionPostings] = []
         try:
-            res = await client.get(self.BASE_URL, headers=self.headers, timeout=self.timeout)
-            if res.status_code != 200:
+            res = await self.safe_get(client, self.BASE_URL)
+            if not res or res.status_code != 200:
                 return []
 
             soup = BeautifulSoup(res.text, "html.parser")
-            job_rows = soup.select(".views-row, .job-item, article")
+            job_rows = soup.select(".c-job-card, article.js-job-card, .job-item, .views-row")
             
             for row in job_rows:
                 text = row.get_text(" ", strip=True)
                 if not any(kw in text.lower() for kw in ["election", "returning officer", "dro", "poll clerk", "voting"]):
                     continue
 
-                title_elem = row.select_one("h2 a, h3 a, .views-field-title a, a")
+                title_elem = row.select_one(".c-job-card__title, h2 a, h3 a, a")
                 if not title_elem:
                     continue
 
-                title = title_elem.get_text(strip=True)
-                href = title_elem.get("href", "")
-                full_url = f"https://www.amo.on.ca{href}" if href.startswith("/") else href
+                title = title_elem.get_text(" ", strip=True).replace("Position:", "").strip()
+                link = row.find("a", href=True)
+                href = link["href"] if link else ""
+                full_url = f"https://jobs.amo.on.ca{href}" if href.startswith("/") else href
 
                 # Employer / Municipality
-                employer_elem = row.select_one(".views-field-field-employer, .field--name-field-employer")
-                muni_name = employer_elem.get_text(strip=True) if employer_elem else "Ontario Municipality"
+                org_elem = row.select_one(".c-job-card__organization, .field--name-field-employer")
+                muni_name = org_elem.get_text(" ", strip=True).replace("Organization:", "").strip() if org_elem else "Ontario Municipality"
 
                 roles = extract_roles_from_content(title + "\n" + text)
                 if not roles:
@@ -51,9 +52,10 @@ class AMOMunicipalElectionScraper(BaseScraper):
                     municipality=muni_name,
                     region_or_county="Ontario",
                     election_portal_url=self.BASE_URL,
-                    apply_url=full_url,
+                    apply_url=full_url or self.BASE_URL,
                     status="Accepting Applications",
                     election_date="October 26, 2026",
+                    is_verified_2026=True,
                     roles=roles,
                     raw_text_snippet=text[:300]
                 ))

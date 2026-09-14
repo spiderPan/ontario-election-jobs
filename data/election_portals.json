@@ -4,8 +4,8 @@
     "region": "Toronto",
     "tier": "Single-tier",
     "type": "html_portal",
-    "election_url": "https://www.toronto.ca/elections",
-    "apply_url": "https://www.toronto.ca/elections",
+    "election_url": "https://www.toronto.ca/city-government/elections/about-election-jobs/",
+    "apply_url": "https://www.toronto.ca/city-government/elections/about-election-jobs/",
     "contact_email": "elections@toronto.ca"
   },
   {
@@ -13,8 +13,8 @@
     "region": "Peel",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://mississaugavotes.ca/",
-    "apply_url": "https://mississaugavotes.ca/work-with-us/",
+    "election_url": "https://mississaugavotes.ca/2026-municipal-election/for-election-workers/become-an-election-worker/",
+    "apply_url": "https://mississaugavotes.ca/2026-municipal-election/for-election-workers/become-an-election-worker/",
     "contact_email": "mississauga.votes@mississauga.ca"
   },
   {
@@ -22,8 +22,8 @@
     "region": "Peel",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.brampton.ca/EN/City-Hall/Election/Pages/welcome.aspx",
-    "apply_url": "https://www.brampton.ca/EN/City-Hall/Election/Pages/welcome.aspx",
+    "election_url": "https://www.brampton.ca/EN/City-Hall/Election/Workers/Pages/Available-Positions.aspx",
+    "apply_url": "https://forms.office.com/r/7JHen2LfUD",
     "contact_email": "election.office@brampton.ca"
   },
   {
@@ -76,8 +76,8 @@
     "region": "Waterloo",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.kitchener.ca/election",
-    "apply_url": "https://www.kitchener.ca/election",
+    "election_url": "https://www.kitchener.ca/council-and-city-administration/election/election-hiring-in-2026/",
+    "apply_url": "https://www.kitchener.ca/council-and-city-administration/election/election-hiring-in-2026/",
     "contact_email": "election@kitchener.ca"
   },
   {
@@ -103,8 +103,8 @@
     "region": "Halton",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://myvoteburlington.ca/",
-    "apply_url": "https://myvoteburlington.ca/",
+    "election_url": "https://myvote.burlington.ca/work-the-election/",
+    "apply_url": "https://myvote.burlington.ca/work-the-election/",
     "contact_email": "elections@burlington.ca"
   },
   {
@@ -157,8 +157,8 @@
     "region": "Durham",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.whitby.ca/elections",
-    "apply_url": "https://www.whitby.ca/elections",
+    "election_url": "https://www.whitby.ca/town-hall/municipal-elections/election-worker-recruitment/",
+    "apply_url": "https://www.whitby.ca/town-hall/municipal-elections/election-worker-recruitment/",
     "contact_email": "elections@whitby.ca"
   },
   {
@@ -175,8 +175,8 @@
     "region": "Frontenac",
     "tier": "Single-tier",
     "type": "html_portal",
-    "election_url": "https://www.cityofkingston.ca/city-hall/elections",
-    "apply_url": "https://www.cityofkingston.ca/city-hall/elections",
+    "election_url": "https://www.cityofkingston.ca/council-and-city-administration/elections/election-jobs/",
+    "apply_url": "https://careers.cityofkingston.ca/CL2/XWEB/XWEB.ASP?CLID=61577&PAGE=JOBDETAILS&JOBID=J0726-0282&BRID=381513&LANG=1",
     "contact_email": "elections@cityofkingston.ca"
   },
   {
@@ -184,8 +184,8 @@
     "region": "Waterloo",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.waterloo.ca/elections",
-    "apply_url": "https://www.waterloo.ca/elections",
+    "election_url": "https://www.waterloo.ca/council-and-committees/municipal-elections/apply-to-be-an-election-worker/",
+    "apply_url": "https://www.waterloo.ca/council-and-committees/municipal-elections/apply-to-be-an-election-worker/",
     "contact_email": "elections@waterloo.ca"
   },
   {
@@ -220,8 +220,8 @@
     "region": "Niagara",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://niagarafalls.ca/elections",
-    "apply_url": "https://niagarafalls.ca/elections",
+    "election_url": "https://niagarafalls.ca/city-government/elections/election-employment/",
+    "apply_url": "https://niagarafalls.ca/city-government/elections/election-employment/",
     "contact_email": "clerk@niagarafalls.ca"
   },
   {
@@ -238,8 +238,8 @@
     "region": "Lambton",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.sarnia.ca/elections",
-    "apply_url": "https://www.sarnia.ca/elections",
+    "election_url": "https://www.sarnia.ca/city-government/elections/2026-election/election-jobs-working-the-election/",
+    "apply_url": "https://www.sarnia.ca/city-government/elections/2026-election/election-jobs-working-the-election/",
     "contact_email": "clerks@sarnia.ca"
   },
   {
@@ -301,8 +301,8 @@
     "region": "Niagara",
     "tier": "Lower-tier",
     "type": "html_portal",
-    "election_url": "https://www.stcatharines.ca/elections",
-    "apply_url": "https://www.stcatharines.ca/elections",
+    "election_url": "https://www.stcatharines.ca/council-and-administration/elections/election-employment/",
+    "apply_url": "https://www.stcatharines.ca/council-and-administration/elections/election-employment/",
     "contact_email": "elections@stcatharines.ca"
   },
   {
@@ -319,8 +319,8 @@
     "region": "Nipissing",
     "tier": "Single-tier",
     "type": "html_portal",
-    "election_url": "https://northbay.ca/city-government/municipal-elections/",
-    "apply_url": "https://northbay.ca/city-government/municipal-elections/",
+    "election_url": "https://northbay.ca/city-government/2026-elections/",
+    "apply_url": "https://northbay.ca/city-government/2026-elections/",
     "contact_email": "elections@northbay.ca"
   },
   {
@@ -367,5 +367,104 @@
     "election_url": "https://www.caledon.ca/elections",
     "apply_url": "https://www.caledon.ca/elections",
     "contact_email": "elections@caledon.ca"
+  },
+  {
+    "municipality": "Municipality of Clarington",
+    "region": "Durham",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.clarington.net/elections",
+    "apply_url": "https://www.clarington.net/elections",
+    "contact_email": "elections@clarington.net"
+  },
+  {
+    "municipality": "City of Stratford",
+    "region": "Perth",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.stratford.ca/elections",
+    "apply_url": "https://www.stratford.ca/elections",
+    "contact_email": "elections@stratford.ca"
+  },
+  {
+    "municipality": "City of Woodstock",
+    "region": "Oxford",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.cityofwoodstock.ca/elections",
+    "apply_url": "https://www.cityofwoodstock.ca/elections",
+    "contact_email": "elections@cityofwoodstock.ca"
+  },
+  {
+    "municipality": "City of Timmins",
+    "region": "Cochrane",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.timmins.ca/our_services/municipal_elections",
+    "apply_url": "https://www.timmins.ca/our_services/municipal_elections",
+    "contact_email": "clerks@timmins.ca"
+  },
+  {
+    "municipality": "City of Kawartha Lakes",
+    "region": "Kawartha Lakes",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.kawarthalakes.ca/elections",
+    "apply_url": "https://www.kawarthalakes.ca/elections",
+    "contact_email": "election@kawarthalakes.ca"
+  },
+  {
+    "municipality": "Town of Georgina",
+    "region": "York",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.georgina.ca/municipal-government/2026-election",
+    "apply_url": "https://www.georgina.ca/municipal-government/2026-election",
+    "contact_email": "elections@georgina.ca"
+  },
+  {
+    "municipality": "Town of Orangeville",
+    "region": "Dufferin",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.orangeville.ca/en/town-hall/elections.aspx",
+    "apply_url": "https://www.orangeville.ca/en/town-hall/elections.aspx",
+    "contact_email": "elections@orangeville.ca"
+  },
+  {
+    "municipality": "Town of Fort Erie",
+    "region": "Niagara",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.forterie.ca/pages/MunicipalElections",
+    "apply_url": "https://www.forterie.ca/pages/MunicipalElections",
+    "contact_email": "elections@forterie.ca"
+  },
+  {
+    "municipality": "Town of Niagara-on-the-Lake",
+    "region": "Niagara",
+    "tier": "Lower-tier",
+    "type": "html_portal",
+    "election_url": "https://www.notl.com/council-government/elections",
+    "apply_url": "https://www.notl.com/council-government/elections",
+    "contact_email": "clerks@notl.com"
+  },
+  {
+    "municipality": "Norfolk County",
+    "region": "Norfolk",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.norfolkcounty.ca/government/elections/",
+    "apply_url": "https://www.norfolkcounty.ca/government/elections/",
+    "contact_email": "elections@norfolkcounty.ca"
+  },
+  {
+    "municipality": "Haldimand County",
+    "region": "Haldimand",
+    "tier": "Single-tier",
+    "type": "html_portal",
+    "election_url": "https://www.haldimandcounty.ca/elections/",
+    "apply_url": "https://www.haldimandcounty.ca/elections/",
+    "contact_email": "elections@haldimandcounty.ca"
   }
 ]

@@ -96,31 +96,48 @@ class HtmlPortalScraper(BaseScraper):
             for tag in soup(["script", "style", "noscript", "svg", "header", "footer", "nav"]):
                 tag.decompose()
 
-            # Find main content
+            # Find main content with robust fallback if main-content div is just a short anchor
             main_content = (
                 soup.find("main") or 
                 soup.find("div", id=re.compile(r'content|main|article', re.I)) or 
                 soup.find("div", class_=re.compile(r'content|main|body|page-content', re.I)) or 
                 soup
             )
+            if len(main_content.get_text(strip=True)) < 100:
+                main_content = soup.find("body") or soup
 
             text = main_content.get_text("\n", strip=True)
 
-            # Subpage discovery: check if this is a general landing page that links to a dedicated job page
+            # Subpage discovery: search for dedicated election worker / jobs subpages
+            job_link_regex = re.compile(
+                r'(?:election|poll)\s*(?:workers?|jobs?|employment|hiring|opportunities|recruitment|positions?)|'
+                r'becom(?:e|ing)\s*(?:an\s*)?(?:election|poll)\s*worker|'
+                r'work\s*(?:at|the|for|during)?\s*(?:the\s*)?(?:municipal\s*)?election|'
+                r'available-position|about-election-jobs|election-hiring|election-recruitment|'
+                r'election-workers|apply-to-be-an-election-worker|work-the-election|work-with-us',
+                re.IGNORECASE
+            )
+
             subpage_candidates = []
             for a_tag in soup.find_all("a", href=True):
-                href = a_tag["href"]
-                link_text = a_tag.get_text(strip=True).lower()
-                href_lower = href.lower()
-                if any(kw in link_text for kw in ["work the election", "work at the election", "work during the election", "election jobs", "election employment", "become an election worker", "work the municipal election"]) or \
-                   any(kw in href_lower for kw in ["/work-the-election", "/working-election", "/work-election", "/election-jobs", "/election-employment", "/election-workers"]):
+                href = a_tag["href"].strip()
+                link_text = a_tag.get_text(" ", strip=True)
+                if not href or href.startswith("#") or href.startswith("mailto:") or href.startswith("tel:"):
+                    continue
+                
+                # Exclude unrelated municipal employment links
+                if any(ex in href.lower() or ex in link_text.lower() for ex in ["transit", "fire", "aquatic", "student-job-opportunities", "employment-area", "economic"]):
+                    continue
+
+                if job_link_regex.search(link_text) or job_link_regex.search(href):
                     full_sub_url = urljoin(str(res.url), href)
                     if full_sub_url != str(res.url) and full_sub_url not in subpage_candidates:
                         subpage_candidates.append(full_sub_url)
 
-            # If subpages found, crawl the most promising subpage to enrich content
+            # Crawl up to 3 candidate subpages to gather comprehensive role and pay data
+            direct_apply_candidate = None
             if subpage_candidates:
-                for sub_url in subpage_candidates[:2]:
+                for sub_url in subpage_candidates[:3]:
                     sub_res = await self.safe_get(client, sub_url)
                     if sub_res and sub_res.status_code == 200:
                         sub_soup = BeautifulSoup(sub_res.text, "html.parser")
@@ -132,13 +149,25 @@ class HtmlPortalScraper(BaseScraper):
                             sub_soup.find("div", class_=re.compile(r'content|main|body|page-content', re.I)) or
                             sub_soup
                         )
+                        if len(sub_main.get_text(strip=True)) < 100:
+                            sub_main = sub_soup.find("body") or sub_soup
+
                         sub_text = sub_main.get_text("\n", strip=True)
-                        sub_valid, _, _ = validate_2026_freshness(sub_text, str(sub_res.url))
-                        if sub_valid or "2026" in sub_text or "election" in sub_text.lower():
-                            text = text + "\n\n" + sub_text
-                            main_content = sub_main
-                            res = sub_res
-                            break
+                        # Append subpage content
+                        text = text + "\n\n" + sub_text
+
+                        # Check for direct apply links on subpage
+                        for sub_a in sub_main.find_all("a", href=True):
+                            sub_href = sub_a["href"].strip()
+                            sub_lt = sub_a.get_text(" ", strip=True).lower()
+                            # Check form domains or explicit apply buttons
+                            if any(d in sub_href.lower() for d in ["workerapplication.voterview.ca", "forms.office.com", "docs.google.com/forms", "formstack.com", "surveymonkey.com", "myworkdayjobs.com"]):
+                                if not any(ex in sub_href.lower() for ex in ["audit", "compliance", "rebate"]):
+                                    direct_apply_candidate = sub_href
+                                    break
+                            elif any(kw in sub_lt for kw in ["complete your application online", "apply online today", "submit online application", "apply now", "online application form"]):
+                                if not any(ex in sub_lt or ex in sub_href.lower() for ex in ["audit", "compliance", "rebate", "nomination", "candidate"]):
+                                    direct_apply_candidate = urljoin(str(sub_res.url), sub_href)
 
             # Strict 2026 Freshness check
             is_valid_2026, reason, yr = validate_2026_freshness(text, str(res.url))
@@ -149,34 +178,53 @@ class HtmlPortalScraper(BaseScraper):
 
             status = parse_status_from_text(text)
 
-            # Check if this municipality has confirmed, verified actual rates
-            if self.municipality in CONFIRMED_ACTUAL_RATES:
-                return self.build_confirmed_posting()
-            else:
-                # Parse or extract roles
-                roles = extract_roles_from_content(text)
+            # Live-first role extraction
+            roles = extract_roles_from_content(text)
+            has_published_pay = any(r.pay_status == "ACTUAL_PUBLISHED" for r in roles)
+
+            # If live parsing found no published pay, check if we have confirmed published fallback
+            if not has_published_pay and self.municipality in CONFIRMED_ACTUAL_RATES:
+                confirmed_posting = self.build_confirmed_posting()
+                roles = confirmed_posting.roles
 
             # Detect Apply Link and whether a direct application form is live
             apply_link = str(res.url)
             has_direct_apply = False
 
-            for a_tag in main_content.find_all("a", href=True):
-                href = a_tag["href"]
-                link_text = a_tag.get_text(strip=True).lower()
-                if any(kw in link_text for kw in ["apply now", "application form", "submit application", "work at the election", "work with us", "apply online", "online application"]):
-                    apply_link = urljoin(self.election_url, href)
-                    has_direct_apply = True
-                    break
-                elif any(domain in href.lower() for domain in ["forms.office.com", "docs.google.com/forms", "formstack.com", "surveymonkey.com", "myworkdayjobs.com", "dayforcehcm.com", "voterview.ca"]):
-                    apply_link = href
-                    has_direct_apply = True
-                    break
+            if direct_apply_candidate:
+                apply_link = direct_apply_candidate
+                has_direct_apply = True
+            else:
+                for a_tag in main_content.find_all("a", href=True):
+                    href = a_tag["href"].strip()
+                    link_text = a_tag.get_text(" ", strip=True).lower()
+                    href_lower = href.lower()
+
+                    # Avoid non-election job forms (such as audit compliance, candidate nomination)
+                    if any(ex in href_lower or ex in link_text for ex in ["audit", "compliance", "rebate", "nomination", "candidate", "third-party"]):
+                        continue
+
+                    if any(kw in link_text for kw in ["apply now", "application form", "submit application", "apply online", "online application"]):
+                        apply_link = urljoin(self.election_url, href)
+                        has_direct_apply = True
+                        break
+                    elif any(domain in href_lower for domain in ["workerapplication.voterview.ca", "forms.office.com", "docs.google.com/forms", "formstack.com", "surveymonkey.com"]):
+                        apply_link = href
+                        has_direct_apply = True
+                        break
 
             if not has_direct_apply and self.apply_url and self.apply_url != self.election_url:
-                apply_link = self.apply_url
-                has_direct_apply = True
+                # Validate that configured apply_url doesn't point to audit/nomination
+                if not any(ex in self.apply_url.lower() for ex in ["audit", "compliance", "rebate"]):
+                    apply_link = self.apply_url
+                    has_direct_apply = True
 
-            if not has_direct_apply and status == "Accepting Applications":
+            # Reconcile status
+            if status == "Closed":
+                pass
+            elif has_direct_apply:
+                status = "Accepting Applications"
+            else:
                 status = "Information Portal"
 
             reqs = extract_requirements(text)
@@ -191,7 +239,9 @@ class HtmlPortalScraper(BaseScraper):
             found_email = self.known_email
             email_match = EMAIL_REGEX.search(text)
             if email_match and not found_email:
-                found_email = email_match.group(1)
+                cand_email = email_match.group(1).lower()
+                if not any(cand_email.endswith(x) for x in [".png", ".jpg", ".svg", ".css"]):
+                    found_email = cand_email
 
             phone_match = PHONE_REGEX.search(text)
             found_phone = phone_match.group(0) if phone_match else None
